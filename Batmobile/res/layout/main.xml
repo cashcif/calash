@@ -1,12 +1,43 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    >
-<TextView  
-    android:layout_width="fill_parent" 
-    android:layout_height="wrap_content" 
-    android:text="@string/hello"
-    />
-</LinearLayout>
+<?xml version="1.0" encoding="UTF-8"?>
+<RelativeLayout
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	xmlns:android="http://schemas.android.com/apk/res/android">
+	<ImageView
+		android:id="@+id/logo"
+		android:layout_height="wrap_content"
+		android:layout_width="wrap_content"
+		android:src="@drawable/eyes"
+		android:layout_centerHorizontal="true"
+		android:padding="2dip"
+		android:layout_alignParentTop="true" />
+	<TextView
+		android:id="@+id/helpText"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:text="@string/help_text"
+		android:layout_below="@id/logo"
+		android:gravity="center" android:layout_above="@+id/buttonEnter" android:padding="2dip" android:textStyle="bold"/>
+	<!--	<EditText-->
+	<!--		android:id="@+id/username"-->
+	<!--		android:layout_height="wrap_content"-->
+	<!--		android:hint="Username"-->
+	<!--		android:enabled="false"-->
+	<!--		android:focusable="false"-->
+	<!--		android:layout_below="@id/helpText"-->
+	<!--		android:layout_width="fill_parent"></EditText>-->
+	<!--	<EditText-->
+	<!--		android:id="@+id/password"-->
+	<!--		android:layout_height="wrap_content"-->
+	<!--		android:hint="Password"-->
+	<!--		android:enabled="false"-->
+	<!--		android:focusable="false"-->
+	<!--		android:layout_below="@id/username"-->
+	<!--		android:layout_width="fill_parent"></EditText>-->
+	<Button
+		android:id="@+id/buttonEnter"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:text="Enter"
+		android:layout_alignParentBottom="true" />
+</RelativeLayout>

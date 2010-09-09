@@ -13,13 +13,13 @@
         android:id="@+id/point"
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
-        android:text="RED222"
+        android:text="POINT"
         android:layout_weight="1"/>
       <Button
         android:id="@+id/mute"
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
-        android:text="GREEN2"
+        android:text="MUTE "
         android:layout_weight="1"/>
   </LinearLayout>
         
@@ -32,13 +32,13 @@
         android:id="@+id/repeat"
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
-        android:text="YELLOW"
+        android:text="REPEAT"
         android:layout_weight="1"/>
       <Button
         android:id="@+id/exit"
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
-        android:text="BLACK2"
+        android:text="  EXIT  "
         android:layout_weight="1"/>
   </LinearLayout>
   </LinearLayout>
