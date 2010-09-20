@@ -3,7 +3,6 @@ package batmob.source;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
@@ -80,6 +79,8 @@ public class ButtonGrid extends Activity {
     		buttonPoint.setOnClickListener(new OnClickListener() {
     			public void onClick(View v) {
     				Log.v(TAG, "Locate POI");
+    				
+    	//			WikitudeARIntent intent = new WikitudeARIntent();
     				
     			}
     		});
