@@ -181,7 +181,7 @@ public class BasicOpenARDemoActivity extends Activity {
      */
     private WikitudeARIntent prepareIntent() {
         // create the intent
-        WikitudeARIntent intent = new WikitudeARIntent(this.getApplication(), null, null);
+        WikitudeARIntent intent = new WikitudeARIntent(this.getApplication(), null, null, null, true);
         // add the POIs
         this.addPois(intent);
         // add one menu item
