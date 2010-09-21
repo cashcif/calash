@@ -22,8 +22,8 @@ public class BatmobileMain extends Activity {
 		buttonEnter.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				Log.v(TAG, "Starting Application");
-				Intent tabs = new Intent(BatmobileMain.this, ButtonGrid.class);
-				BatmobileMain.this.startActivity(tabs);
+				Intent grid = new Intent(BatmobileMain.this, ButtonGrid.class);
+				BatmobileMain.this.startActivity(grid);
 				
 			}
 
