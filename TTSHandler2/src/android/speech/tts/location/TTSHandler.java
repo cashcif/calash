@@ -5,7 +5,9 @@ import java.util.Locale;
 import java.util.UUID;
 
 import android.app.Activity;
-import android.location.Location;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
@@ -19,9 +21,11 @@ public class TTSHandler extends Activity implements TextToSpeech.OnInitListener{
 	private double maxdistance = Double.MIN_VALUE;
 	private float maxpitch = 100;
 	private int maxvolume = 0;
-	private ArrayList<POI> pois;
-	private LocationHandler gps;
-	private POI currentLocation;
+	private float maxspeechrate = 2;
+	private ArrayList<IPOI> pois;
+	private ILocationHandler gps;
+	private IDirectionHandler compass;
+	private IPOI currentLocation;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -32,15 +36,15 @@ public class TTSHandler extends Activity implements TextToSpeech.OnInitListener{
         currentLocation.setLongitude(gps.getCurrentLocation().getLongitude());
     }
     
-    public void addPOIs(ArrayList<POI> newpoi){
-    	for (POI i : newpoi)
+    public void addPOIs(ArrayList<IPOI> newpoi){
+    	for (IPOI i : newpoi)
     		pois.add(i);
     	resetExtremes();
     }
     
-    public void deletePOIs(ArrayList<POI> oldpoi){
-    	for (POI i : oldpoi)
-    		for(POI j : pois)
+    public void deletePOIs(ArrayList<IPOI> oldpoi){
+    	for (IPOI i : oldpoi)
+    		for(IPOI j : pois)
     			if(i == j)
     				pois.remove(j);
     	resetExtremes();
@@ -48,11 +52,13 @@ public class TTSHandler extends Activity implements TextToSpeech.OnInitListener{
     
     public void clearPOIs(){
     	pois.clear();
+    	resetExtremes();
     }
     
-    public void speak(POI poi, int flushQueue){
+    public void speak(IPOI poi, int flushQueue){
     	setPitch(poi);
     	setVolume(poi);
+    	setSpeechRate();
     	tts.speak(poi.getName(), flushQueue, null);
     }
     
@@ -73,16 +79,27 @@ public class TTSHandler extends Activity implements TextToSpeech.OnInitListener{
         }
 	}
 	
-	private void setPitch(POI poi){
+	private void setPitch(IPOI poi){
     	if (gps.getCurrentLocation().getAltitude() < poi.getAltitude())
     		tts.setPitch((float) (poi.getAltitude()/maxaltitude*maxpitch));
     	else
     		tts.setPitch((float) (poi.getAltitude()/maxaltitude));
     }
 	
-	private void setVolume(POI poi){
+	private void setVolume(IPOI poi){
 		maxvolume = am.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
 		am.setStreamVolume(AudioManager.STREAM_MUSIC, (int) (poi.distanceTo(currentLocation)/maxdistance*maxvolume), AudioManager.FLAG_VIBRATE);
+	}
+	
+	private void setSpeechRate() throws InterruptedException{
+		SensorEvent oldevent = compass.getCurrentDirection();
+		wait(500);
+		SensorEvent newevent = compass.getCurrentDirection();
+		if(oldevent.values[0] < newevent.values[0] + 1)
+			
+		if (oldevent.values[0] > newevent.values[0] + 1)
+			
+		tts.setSpeechRate(1);
 	}
 	
 	private void resetExtremes(){
@@ -92,19 +109,21 @@ public class TTSHandler extends Activity implements TextToSpeech.OnInitListener{
 			maxdistance = Double.MIN_VALUE;
 		}
 		else{
-			for (POI i : pois){
-				if (maxaltitude < i.getAltitude())
-					maxaltitude = i.getAltitude();
-				if (minaltitude > i.getAltitude())
-					minaltitude = i.getAltitude();
-				if (i.distanceTo(currentLocation) > maxdistance)
-					maxdistance = i.distanceTo(currentLocation);
+			for (IPOI i : pois){
+				double temp = i.getAltitude();
+				if (maxaltitude < temp)
+					maxaltitude = temp;
+				if (minaltitude > temp)
+					minaltitude = temp;
+				temp = i.distanceTo(currentLocation);
+				if (temp > maxdistance)
+					maxdistance = temp;
 			}
     	}
 	}
 	 
-	 private POI getPOI(UUID id){
-		 for (POI i : pois)
+	 private IPOI getPOI(UUID id){
+		 for (IPOI i : pois)
 			 if (i.getId() == id)
 				 return i;
 		 return null;

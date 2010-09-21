@@ -4,9 +4,11 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     >
-<TextView  
-    android:layout_width="fill_parent" 
-    android:layout_height="wrap_content" 
-    android:text="@string/hello"
-    />
+
+<TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/TextViewDistance" android:text="Distance"></TextView><SeekBar android:layout_height="wrap_content" android:layout_width="fill_parent" android:id="@+id/SeekBarDistance" android:max="100" android:progress="50"></SeekBar>
+
+<TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/TextViewElevation" android:text="Elevation"></TextView>
+<SeekBar android:layout_height="wrap_content" android:layout_width="fill_parent" android:id="@+id/SeekBarElevation" android:max="100" android:progress="50"></SeekBar><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Azimuth" android:id="@+id/TextViewAzimuth"></TextView>
+
+<SeekBar android:layout_height="wrap_content" android:layout_width="fill_parent" android:id="@+id/SeekBarAzimuth" android:max="100" android:progress="50"></SeekBar>
 </LinearLayout>
