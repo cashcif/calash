@@ -12,4 +12,5 @@ public interface IPOI {
 	public UUID getId();
 	public String getName();
 	public float distanceTo(IPOI poi);
+	public float getBearing();
 }
