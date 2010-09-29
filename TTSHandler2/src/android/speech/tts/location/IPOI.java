@@ -11,6 +11,4 @@ public interface IPOI {
 	public void setAltitude(double height);
 	public UUID getId();
 	public String getName();
-	public float distanceTo(IPOI poi);
-	public float getBearing();
 }

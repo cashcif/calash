@@ -1,5 +1,6 @@
 package android.speech.tts.location;
 
+import java.util.ArrayList;
 import java.util.Locale;
 import android.app.Activity;
 import android.hardware.SensorEvent;
@@ -8,36 +9,46 @@ import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import java.lang.Math;
 
-public class AbsoluteTTS extends Activity implements TextToSpeech.OnInitListener{
+public class AbsoluteTTS extends Activity implements TextToSpeech.OnInitListener, ITTS{
 	
-	private TextToSpeech tts = new TextToSpeech(this, this);
-	private AudioManager am = (AudioManager) getSystemService(AUDIO_SERVICE);
-	private double maxelevation = Double.MIN_VALUE; //TODO initialise maxaltitude
-	private double minelevation = Double.MAX_VALUE; //TODO initialise minaltitude
-	private double maxdistance = 1000;
-	private float maxpitch = 100;
-	private double pitchfactor = 0.1;
-	private int maxvolume = 0;
-	private float maxspeechrate = 2;
-	private double speechratefactor = 0.1;
+	private TextToSpeech tts;
+	private AudioManager am;
+	private double maxelevation;
+	private double minelevation;
+	private double maxdistance;
+	private float maxpitch;
+	private double pitchfactor;
+	private int maxvolume;
+	private float maxspeechrate;
+	private double speechratefactor;
 	private ILocationHandler gps;
 	private IDirectionHandler compass;
-	private IPOI currentLocation;
+	private POI currentLocation;
+	private ArrayList<POI> pois;
 	
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
-        currentLocation.setAltitude(gps.getCurrentLocation().getAltitude());
-        currentLocation.setLatitude(gps.getCurrentLocation().getLatitude());
-        currentLocation.setLongitude(gps.getCurrentLocation().getLongitude());
-    }
-    
-    public void speak(IPOI poi, int flushQueue) throws InterruptedException{
+	public AbsoluteTTS(){
+		tts = new TextToSpeech(this, this);
+    	am = (AudioManager) getSystemService(AUDIO_SERVICE);
+    	maxelevation = Double.MIN_VALUE; //TODO initialise maxaltitude
+    	minelevation = Double.MAX_VALUE; //TODO initialise minaltitude
+    	maxdistance = 1000;
+    	maxpitch = 100;
+    	pitchfactor = 0.1;
+    	maxvolume = 0;
+    	maxspeechrate = 2;
+    	speechratefactor = 0.1;
+	}
+	
+    public void speak(POI poi, int flushQueue) {
     		setPitch(poi);
     		setVolume(poi);
-    		setSpeechRate();
-    		tts.speak(poi.getName() + convertDirec(poi.getBearing() - currentLocation.getBearing()), flushQueue, null);
+    		try {
+				setSpeechRate();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+    		//tts.speak(poi.getName() + convertDirec(poi.getBearing() - currentLocation.getBearing()), flushQueue, null);
     }
     
     public void onDestroy(){
@@ -57,8 +68,8 @@ public class AbsoluteTTS extends Activity implements TextToSpeech.OnInitListener
         }
 	}
 	
-	private void setPitch(IPOI poi){
-		double angle = Math.atan(poi.getAltitude()/poi.distanceTo(currentLocation));
+	private void setPitch(POI poi){
+		/*double angle = Math.atan(poi.getAltitude()/poi.distanceTo(currentLocation));
 		if(angle >= 0)
 			if( angle > maxelevation)
 				tts.setPitch((float) (maxpitch*pitchfactor));
@@ -68,10 +79,10 @@ public class AbsoluteTTS extends Activity implements TextToSpeech.OnInitListener
 			if( angle < minelevation)
 				tts.setPitch((float) (minelevation*pitchfactor/maxelevation));
 			else
-				tts.setPitch((float) (angle*pitchfactor/maxelevation));
+				tts.setPitch((float) (angle*pitchfactor/maxelevation));*/
     }
 	
-	private void setVolume(IPOI poi){
+	private void setVolume(POI poi){
 		maxvolume = am.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
 		am.setStreamVolume(AudioManager.STREAM_MUSIC, (int) (poi.distanceTo(currentLocation)/maxdistance*maxvolume), AudioManager.FLAG_VIBRATE);
 	}
