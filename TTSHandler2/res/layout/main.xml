@@ -3,12 +3,86 @@
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    >
-
-<TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/TextViewDistance" android:text="Distance"></TextView><SeekBar android:layout_height="wrap_content" android:layout_width="fill_parent" android:id="@+id/SeekBarDistance" android:max="100" android:progress="50"></SeekBar>
-
-<TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/TextViewElevation" android:text="Elevation"></TextView>
-<SeekBar android:layout_height="wrap_content" android:layout_width="fill_parent" android:id="@+id/SeekBarElevation" android:max="100" android:progress="50"></SeekBar><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Azimuth" android:id="@+id/TextViewAzimuth"></TextView>
-
-<SeekBar android:layout_height="wrap_content" android:layout_width="fill_parent" android:id="@+id/SeekBarAzimuth" android:max="100" android:progress="50"></SeekBar>
+>
+	<RadioGroup android:id="@+id/RadioGroup01" 
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+	>
+		<RadioButton android:text="Simple"
+			android:id="@+id/RBSimple"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:checked="true"
+		>
+		</RadioButton>
+		<RadioButton android:text="Relative"
+			android:id="@+id/RBRelative"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+		>
+		</RadioButton>
+		<RadioButton android:text="Absolute"
+			android:id="@+id/RBAbsolute"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+		>
+		</RadioButton>
+	</RadioGroup>
+		<TextView android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="Azimuth: 180"
+		android:id="@+id/TextViewAzimuth"
+	>
+	</TextView>
+	<SeekBar android:layout_height="wrap_content"
+		android:layout_width="fill_parent"
+		android:id="@+id/SeekBarAzimuth"
+		android:max="360"
+		android:progress="180"
+	>
+	</SeekBar>
+	<TextView android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:id="@+id/TextViewDistance"
+		android:text="Distance : 500"
+	>
+	</TextView>
+	<SeekBar android:layout_height="wrap_content"
+		android:layout_width="fill_parent"
+		android:id="@+id/SeekBarDistance"
+		android:max="1000"
+		android:progress="500"
+	>
+	</SeekBar>
+	<TextView android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:id="@+id/TextViewElevation"
+		android:text="Elevation: 50"
+	>
+	</TextView>
+	<SeekBar android:layout_height="wrap_content"
+		android:layout_width="fill_parent"
+		android:id="@+id/SeekBarElevation"
+		android:max="100"
+		android:progress="50">
+	</SeekBar>
+	<TextView android:text="Speech Rate: 100"
+		android:id="@+id/TextViewSpeed"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+	>
+	</TextView>
+	<SeekBar android:id="@+id/SeekBarSpeed"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:max="200"
+		android:progress="100"
+	>
+	</SeekBar>
+	<Button android:text="Speak"
+		android:id="@+id/ButtonSpeak"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
+	>
+	</Button>
 </LinearLayout>
