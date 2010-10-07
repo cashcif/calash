@@ -1,5 +1,6 @@
 package android.speech.tts.location;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
@@ -14,8 +15,9 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.location.Location;
 import android.media.AudioManager;
-import android.media.SoundPool;
+import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Environment;
 import android.speech.tts.TextToSpeech;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -32,31 +34,25 @@ import android.widget.TextView;
 public class RelativeTTS extends Activity implements TextToSpeech.OnInitListener, TextToSpeech.OnUtteranceCompletedListener, ITTS, SensorEventListener {
 	
 	private TextToSpeech tts;
+	private HashMap<String, String> ttsmap;
 	private AudioManager audioMan;
+	private MediaPlayer mp;
 	private double maxelevation;
 	private double minelevation;
 	private double maxdistance;
-	private float maxpitch;
 	private double pitchfactor;
 	private int maxvolume;
 	private int minvolume;
-	private float maxspeechrate;
-	private float minspeechrate;
-	private double speechratefactor;
+	private String destfile;
 
 	private ArrayList<POI> pois;
 	private POI currentloc;
-	private boolean finishedspeaking;
-	private HashMap<String, String> ttsmap;
-	private float currentSpeechRate;
-	private long lastUpdate;
-	private boolean checked;
 	
-	private SoundPool sp;
+	private boolean finishedspeaking;
+	private boolean checked;
+	private boolean exp_checked;
 	
 	private SensorManager sensorManager;
-	private float[] compassPoints;
-	
 	private SeekBar AzimuthBar;
 	private SeekBar DistanceBar;
 	private SeekBar ElevationBar;
@@ -71,7 +67,6 @@ public class RelativeTTS extends Activity implements TextToSpeech.OnInitListener
 	private RadioButton AbsoluteRB;
 	private Button SpeakButton;
 	private CheckBox AutoCheck;
-	private boolean exp_checked;
 	private CheckBox ExpCheck;
 	
 	@Override
@@ -79,8 +74,9 @@ public class RelativeTTS extends Activity implements TextToSpeech.OnInitListener
 		super.onCreate(savedInstanceState);
 	    setContentView(R.layout.main);
 	    
-	    
 		tts = new TextToSpeech(this, this);
+		mp = new MediaPlayer();
+		destfile = Environment.getExternalStorageDirectory().toString() + "/test.wav";
 		audioMan = (AudioManager) getSystemService(AUDIO_SERVICE);
 		exp_checked = true;
 		AzimuthBar = (SeekBar) findViewById(R.id.SeekBarAzimuth);
@@ -97,18 +93,13 @@ public class RelativeTTS extends Activity implements TextToSpeech.OnInitListener
 		AbsoluteRB = (RadioButton) findViewById(R.id.RBAbsolute);
 		AutoCheck = (CheckBox) findViewById (R.id.CheckAuto);
 		ExpCheck = (CheckBox) findViewById (R.id.CheckExplicit);
+		SpeakButton = (Button) findViewById(R.id.ButtonSpeak);
 		ExpCheck.setEnabled(true);
 		ExpCheck.setChecked(true);
 		
-		SpeakButton = (Button) findViewById(R.id.ButtonSpeak);
-		
-    	maxpitch = 100;
     	pitchfactor = 2/(Math.PI);
 		maxvolume = audioMan.getStreamMaxVolume(AudioManager.STREAM_MUSIC) - 2;
 		minvolume = 1;
-    	minspeechrate = 1;
-    	maxspeechrate = 2;
-    	speechratefactor = 0.1;	//TODO Initialise speechratefactor
     	checked = false;
     	pois = new ArrayList<POI>();
     	pois.clear();
@@ -145,7 +136,6 @@ public class RelativeTTS extends Activity implements TextToSpeech.OnInitListener
 		SpeedBar.setOnSeekBarChangeListener(SpeedSeekBarChangeListener);
 		
 		resetExtremes();
-		sp = new SoundPool(3, AudioManager.STREAM_MUSIC, 0);
 		
 		SimpleRB.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -162,6 +152,7 @@ public class RelativeTTS extends Activity implements TextToSpeech.OnInitListener
 				startActivity(absoluteTTS);
 			}
 		});
+		
 		ExpCheck.setOnCheckedChangeListener(new OnCheckedChangeListener()
 		{
 		    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
@@ -172,6 +163,7 @@ public class RelativeTTS extends Activity implements TextToSpeech.OnInitListener
 		        	exp_checked = true;
 		    }
 		});
+		
 		SpeakButton.setOnClickListener(new View.OnClickListener(){
 			@Override
 			public void onClick(View arg0) {
@@ -187,6 +179,7 @@ public class RelativeTTS extends Activity implements TextToSpeech.OnInitListener
 			}
 			}
 		});
+		
 		AutoCheck.setOnCheckedChangeListener(new OnCheckedChangeListener()
 		{
 		    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
@@ -202,7 +195,6 @@ public class RelativeTTS extends Activity implements TextToSpeech.OnInitListener
 		        	sensorManager.registerListener(RelativeTTS.this, sensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION), SensorManager.SENSOR_DELAY_NORMAL);
 		    	//	sensorManager.registerListener(RelativeTTS.this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_UI);
 		        }
-
 		    }
 		});
 	}
@@ -212,19 +204,22 @@ public class RelativeTTS extends Activity implements TextToSpeech.OnInitListener
 		for(int i = 0; i < pois.size(); i++){
 			while(!finishedspeaking);
 			speak(pois.get(i), TextToSpeech.QUEUE_ADD);
-			finishedspeaking = false;
 		}
 	}
 	
     private void speak(POI poi, int flushQueue) {
     		setPitch(poi);
     		setVolume(poi);
-    		tts.setSpeechRate(((float) SpeedBar.getProgress())/10 + 1);
+    		setBalance(poi);
+    		tts.setSpeechRate(((float) SpeedBar.getProgress())/5);
+    		finishedspeaking=false;
 			if(exp_checked)
-				tts.speak(poi.getName() + convertDirec(AzimuthBar.getProgress() + poi.bearingTo((Location) currentloc)) + fixDistance(poi.distanceTo(currentloc)+ DistanceBar.getProgress()) + fixElevation(poi.getAltitude()-currentloc.getAltitude()+ElevationBar.getProgress()), flushQueue, ttsmap);
+				tts.synthesizeToFile(poi.getName() + convertDirec(AzimuthBar.getProgress() + poi.bearingTo((Location) currentloc)) + fixDistance(poi.distanceTo(currentloc)+ DistanceBar.getProgress()) + fixElevation(poi.getAltitude()-currentloc.getAltitude()+ElevationBar.getProgress()), ttsmap, destfile);
+				//tts.speak(poi.getName() + convertDirec(AzimuthBar.getProgress() + poi.bearingTo((Location) currentloc)) + fixDistance(poi.distanceTo(currentloc)+ DistanceBar.getProgress()) + fixElevation(poi.getAltitude()-currentloc.getAltitude()+ElevationBar.getProgress()), flushQueue, ttsmap);
 			else
-				tts.speak(poi.getName() + convertDirec(AzimuthBar.getProgress() + poi.bearingTo((Location) currentloc)), flushQueue, ttsmap);
-    
+				tts.synthesizeToFile(poi.getName() + convertDirec(AzimuthBar.getProgress() + poi.bearingTo((Location) currentloc)), ttsmap, destfile);
+				//tts.speak(poi.getName() + convertDirec(AzimuthBar.getProgress() + poi.bearingTo((Location) currentloc)), flushQueue, ttsmap);
+			while(!finishedspeaking||mp.isPlaying());
     }
     
     private String fixDistance (float distance)
@@ -240,6 +235,7 @@ public class RelativeTTS extends Activity implements TextToSpeech.OnInitListener
 			return (Float.valueOf(distance) + "metres");
 		}
 	}
+    
 	private String fixElevation (double elevation)
 	{
 		int elevation2 = (int)elevation;
@@ -251,35 +247,12 @@ public class RelativeTTS extends Activity implements TextToSpeech.OnInitListener
 		else
 			return (elevation2 + "degrees up");
 	}
+	
 	private float Round(float Rval, int Rpl) {
 		float p = (float)Math.pow(10,Rpl);
 		Rval = Rval * p;
 		float tmp = Math.round(Rval);
 		return (float)tmp/p;
-	}
-	
-    @Override
-    public void onUtteranceCompleted(String arg0) {
-    	finishedspeaking = true;    	
-    }
-    
-    public void onDestroy(){
-    	if (tts != null){
-    	tts.stop();
-    	tts.shutdown();
-    	}
-    	super.onDestroy();
-    }
-
-	@Override
-	public void onInit(int status) {
-		if (status == TextToSpeech.SUCCESS) {
-            int result = tts.setLanguage(Locale.ENGLISH);
-            if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED)
-            	this.onDestroy();
-        tts.setOnUtteranceCompletedListener(this);
-        }
-	
 	}
 	
 	private void setPitch(POI poi){
@@ -299,6 +272,25 @@ public class RelativeTTS extends Activity implements TextToSpeech.OnInitListener
 		else
 			audioMan.setStreamVolume(AudioManager.STREAM_MUSIC, tempVol, AudioManager.FLAG_VIBRATE);
 	}
+	
+	private void setBalance(POI poi){
+		float angle = AzimuthBar.getProgress() + poi.bearingTo((Location) currentloc);
+		int currentvol = audioMan.getStreamVolume(AudioManager.STREAM_MUSIC);
+		if(angle < 180 && angle > 0)
+			mp.setVolume((float) ((45-angle)/0.45*currentvol), currentvol);
+		else
+			mp.setVolume(currentvol, (float) ((45-angle)/0.45*currentvol));
+	}
+	
+	private String convertDirec(float azimuth) {
+		 int temp = (int) Math.floor((azimuth+15)/30);
+		 temp = temp%12;
+		 if (temp==0)
+		 	temp =12;
+		 if (azimuth < 15)
+		    return "12 o clock";
+		 return String.valueOf(temp) + " o clock";
+	   };
 
 	private void resetExtremes(){
 		
@@ -317,7 +309,54 @@ public class RelativeTTS extends Activity implements TextToSpeech.OnInitListener
 					minelevation = temp;
 			}
 			pitchfactor = 1/(Math.max(maxelevation, Math.abs(minelevation)));
-    	
+	}
+	
+	@Override
+    public void onUtteranceCompleted(String arg0) {
+		mp.reset();
+		try {
+			mp.setDataSource(destfile);
+		} catch (IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalStateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			mp.prepare();
+		} catch (IllegalStateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        mp.start();
+    	finishedspeaking = true;
+    }
+    
+    public void onDestroy(){
+    	if (tts != null){
+    	tts.stop();
+    	tts.shutdown();
+    	}
+    	if(mp != null)
+    		mp.release();
+    	super.onDestroy();
+    }
+
+	@Override
+	public void onInit(int status) {
+		if (status == TextToSpeech.SUCCESS) {
+            int result = tts.setLanguage(Locale.ENGLISH);
+            if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED)
+            	this.onDestroy();
+        tts.setOnUtteranceCompletedListener(this);
+        }
 	}
 
 	private SeekBar.OnSeekBarChangeListener SpatialSeekBarChangeListener = new SeekBar.OnSeekBarChangeListener() {
@@ -340,16 +379,6 @@ public class RelativeTTS extends Activity implements TextToSpeech.OnInitListener
 			ElevationText.setText("Elevation: " + ElevationBar.getProgress());
 		}
 	};
-	
-	private String convertDirec(float azimuth) {
-		 int temp = (int) Math.floor((azimuth+15)/30);
-		 temp = temp%12;
-		 if (temp==0)
-		 	temp =12;
-		 if (azimuth < 15)
-		    return "12 o clock";
-		 return String.valueOf(temp) + " o clock";
-	   };
 	
 	private SeekBar.OnSeekBarChangeListener SpeedSeekBarChangeListener = new SeekBar.OnSeekBarChangeListener() {
 		
@@ -376,9 +405,7 @@ public class RelativeTTS extends Activity implements TextToSpeech.OnInitListener
 }
 
 	public void onSensorChanged(SensorEvent event) {
-		compassPoints = event.values;
-		int num = compassPoints.length;
-	//	if(event.sensor.getType() == Sensor.TYPE_ORIENTATION)
+		//	if(event.sensor.getType() == Sensor.TYPE_ORIENTATION)
 	//      {
 			AzimuthBar.setProgress((int)event.values[0]);
 			ElevationBar.setProgress((int)-event.values[1]);
@@ -430,8 +457,6 @@ public class RelativeTTS extends Activity implements TextToSpeech.OnInitListener
 				inflater.inflate(R.menu.main_menu, menu);
 				return true;
 			}
-			
-		    
 
 			@Override
 			public boolean onOptionsItemSelected(MenuItem item) {
@@ -471,5 +496,4 @@ public class RelativeTTS extends Activity implements TextToSpeech.OnInitListener
 					return super.onOptionsItemSelected(item);
 				}
 			}
-
 }
