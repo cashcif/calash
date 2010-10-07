@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RelativeLayout
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	xmlns:android="http://schemas.android.com/apk/res/android">
+	<ImageView
+		android:id="@+id/logo"
+		android:layout_height="wrap_content"
+		android:layout_width="wrap_content"
+		android:src="@drawable/eyes"
+		android:layout_centerHorizontal="true"
+		android:padding="2dip"
+		android:layout_alignParentTop="true" />
+	<TextView
+		android:id="@+id/helpText"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:text="If need help... Scream"
+		android:layout_below="@id/logo"
+		android:gravity="center" 
+		android:layout_above="@+id/buttonEnter" android:padding="2dip" android:textStyle="bold"/>
+
+	<Button
+		android:id="@+id/buttonEnter"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:text="Enter"
+		android:layout_alignParentBottom="true" />
+</RelativeLayout>

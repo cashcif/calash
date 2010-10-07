@@ -1,38 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
->
+    android:layout_height="fill_parent">
+    
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content">
+    
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+	android:paddingRight="10dip"
+    android:layout_height="fill_parent">
+	
 	<RadioGroup android:id="@+id/RadioGroup01" 
 		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-	>
+		android:layout_height="wrap_content">
 		<RadioButton android:text="Simple"
 			android:id="@+id/RBSimple"
 			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:checked="true"
-		>
+			android:layout_height="wrap_content" android:checked="false">
 		</RadioButton>
 		<RadioButton android:text="Relative"
 			android:id="@+id/RBRelative"
 			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-		>
+			android:layout_height="wrap_content">
 		</RadioButton>
 		<RadioButton android:text="Absolute"
 			android:id="@+id/RBAbsolute"
 			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-		>
+			android:layout_height="wrap_content">
 		</RadioButton>
 	</RadioGroup>
+
+	</LinearLayout>
+
+    
+	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+        	android:paddingTop="15dip"
+    	android:paddingBottom="15dip"
+    	android:paddingLeft="15dip"
+    	android:paddingRight="5dip">
+    	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content">
+    <Button android:text="Speak"
+		android:id="@+id/ButtonSpeak"
+		android:layout_width="fill_parent"
+		android:layout_height="100dip">
+	</Button>
+	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content">
+	<CheckBox android:text="Auto"
+		android:id="@+id/CheckAuto"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content" 
+		android:clickable="true" android:checked="false">
+	</CheckBox>
+		<CheckBox android:text="Exp"
+		android:id="@+id/CheckExplicit"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content" 
+		android:clickable="true" android:checked="false">
+	</CheckBox>
+	</LinearLayout>
+	</LinearLayout>
+    </LinearLayout>
+    
+	</LinearLayout>
+	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content">
+	
 		<TextView android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:text="Azimuth: 180"
-		android:id="@+id/TextViewAzimuth"
-	>
+		android:id="@+id/TextViewAzimuth">
 	</TextView>
 	<SeekBar android:layout_height="wrap_content"
 		android:layout_width="fill_parent"
@@ -66,7 +122,7 @@
 		android:max="100"
 		android:progress="50">
 	</SeekBar>
-	<TextView android:text="Speech Rate: 100"
+	<TextView android:text="Speech Rate: 5"
 		android:id="@+id/TextViewSpeed"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
@@ -75,14 +131,23 @@
 	<SeekBar android:id="@+id/SeekBarSpeed"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
-		android:max="200"
-		android:progress="100"
+		android:max="10"
+		android:progress="5"
 	>
 	</SeekBar>
-	<Button android:text="Speak"
-		android:id="@+id/ButtonSpeak"
-		android:layout_width="fill_parent"
-		android:layout_height="fill_parent"
+		<TextView android:text="Volume: 8"
+		android:id="@+id/TextViewVolume"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
 	>
-	</Button>
+	</TextView>
+	<SeekBar android:id="@+id/SeekBarVolume"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:max="16"
+		android:progress="8"
+	>
+	</SeekBar>
+</LinearLayout>	
 </LinearLayout>
+</ScrollView>

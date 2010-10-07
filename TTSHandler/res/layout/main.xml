@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="fill_parent" >
+    <TextView android:id="@+id/text_to_speech" android:layout_width="fill_parent" android:layout_height="wrap_content" />
+	<EditText android:id="@+id/EditText01" android:layout_height="wrap_content" android:layout_width="fill_parent" android:text="Once upon a time in a land far far away there lived snow white and seven little dwarfs"></EditText>
+	<Button android:id="@+id/again_button" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Read Text"></Button>
+<SeekBar android:id="@+id/SeekBar01" android:layout_height="wrap_content" android:max="8" android:layout_width="fill_parent" android:hapticFeedbackEnabled="true" android:scrollbars="vertical"></SeekBar>
+</LinearLayout>

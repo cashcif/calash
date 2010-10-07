@@ -9,6 +9,6 @@ public interface IPOI {
 	public void setLongitude(double longitude);
 	public double getAltitude();
 	public void setAltitude(double height);
-	public UUID getId();
+	public UUID getId(); // Universal unique Identifier
 	public String getName();
 }

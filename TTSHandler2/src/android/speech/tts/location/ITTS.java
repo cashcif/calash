@@ -1,7 +1,7 @@
 package android.speech.tts.location;
 
 public interface ITTS {
-	public void speak(POI poi, int flushQueue);
+	public void announce();
 	public void onDestroy();
 	public void onInit(int status);
 }
