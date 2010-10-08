@@ -27,7 +27,7 @@
 		        
 		    </intent-filter>
 		</receiver>
-        <activity android:name=".TTSTester"
+        <activity android:name=".BMyEyesMain"
                   android:label="@string/app_name"
                   android:theme="@android:style/Theme.Light.NoTitleBar"
                   android:screenOrientation="portrait">

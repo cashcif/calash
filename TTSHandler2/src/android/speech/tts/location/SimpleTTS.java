@@ -30,6 +30,7 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.RadioButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class SimpleTTS extends Activity implements TextToSpeech.OnInitListener, TextToSpeech.OnUtteranceCompletedListener, ITTS, SensorEventListener {
 	private TextToSpeech tts;
@@ -172,6 +173,9 @@ public class SimpleTTS extends Activity implements TextToSpeech.OnInitListener, 
 		pois.add(point10);
 		pois.add(point11);
 		pois.add(point12);
+		
+		 
+		 
 		sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 		
 		RelativeRB.setOnClickListener(new View.OnClickListener() {
@@ -347,6 +351,10 @@ public class SimpleTTS extends Activity implements TextToSpeech.OnInitListener, 
 	@Override
 	public void onSensorChanged(SensorEvent event) {
 		compassPoints = event.values;
+		currentloc.setLatitude(latitude);
+		currentloc.setLongitude(longitude);
+		currentloc.setAltitude(altitude);
+		Toast.makeText(SimpleTTS.this, "LAT: " + Double.valueOf(latitude) + " LONG: " + Double.valueOf(longitude) + " ALT: " + Double.valueOf(altitude), Toast.LENGTH_LONG).show();
 		int num = compassPoints.length;
 //		if(event.sensor.getType() == Sensor.TYPE_ORIENTATION)
 //	      {
@@ -456,9 +464,9 @@ public class SimpleTTS extends Activity implements TextToSpeech.OnInitListener, 
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			
-			latitude = intent.getDoubleExtra("Latitude", 0.0);
-			longitude = intent.getDoubleExtra("Longitude", 0.0);
-			altitude = intent.getDoubleExtra("Altitude", 0.0);
+			latitude = intent.getDoubleExtra("latitude", 0.0);
+			longitude = intent.getDoubleExtra("longitude", 0.0);
+			altitude = intent.getDoubleExtra("altitude", 0.0);
 
 		}
 

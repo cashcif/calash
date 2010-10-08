@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
-public class TTSTester extends Activity{
+public class BMyEyesMain extends Activity{
 	private static final String TAG = "BatmobileMain";
 
 	 @Override
@@ -28,7 +28,7 @@ public class TTSTester extends Activity{
 	    
 	    buttonEnter.setOnClickListener(new OnClickListener() {
 	    	public void onClick(View v) {
-	   Intent simpleTTS = new Intent(TTSTester.this, SimpleTTS.class);
+	   Intent simpleTTS = new Intent(BMyEyesMain.this, SimpleTTS.class);
 	    		//  Intent simpleTTS = new Intent(TTSTester.this, RelativeTTS.class);
 	startActivity(simpleTTS);
 	    	}

@@ -19,7 +19,7 @@ public class LocationLoggerService  extends Service implements LocationListener{
 	public static double ALTITUDE;
 	public static float SPEED;
 	
-	public static final String BROADCAST_LOCATION_MEASUREMENTS = "service.Geopoint";
+	public static final String BROADCAST_LOCATION_MEASUREMENTS = "android.speech.tts.location.LocationLoggerService";
 	private Bundle geoPointBundle;
 	
 	 private final static String TAG = "LocationLoggerService";
@@ -28,11 +28,15 @@ public class LocationLoggerService  extends Service implements LocationListener{
 	 
 	 @Override
 	 public void onCreate() {
+		 geoPointBundle = new Bundle();
 		 Toast.makeText(this, "Service Created", Toast.LENGTH_LONG).show();
 	  subscribeToLocationUpdates();
+	  Log.d("LocationLoggerService", "onCreate:subscribeToLocationUpdates");
 	  LocationTimerTask geoTimer = new LocationTimerTask(geoPointBundle, this);
+	  
 	  Timer locationMeasurements = new Timer();
 		locationMeasurements.schedule(geoTimer , 1000, 1000);
+		Log.d("LocationLoggerService", "onCreate:schedule");
 	 }
 	 
 	
@@ -40,21 +44,18 @@ public class LocationLoggerService  extends Service implements LocationListener{
 	@Override
 	public void onLocationChanged(Location loc) {
 		Log.d(TAG, loc.toString());
-		geoPointBundle.putDouble("Latitude", loc.getLatitude());
-		geoPointBundle.putDouble("Longitude", loc.getLongitude());
-		geoPointBundle.putDouble("Altitude", loc.getAltitude());
 		
+		geoPointBundle.putDouble("latitude", loc.getLatitude());
+		geoPointBundle.putDouble("longitude", loc.getLongitude());
+		geoPointBundle.putDouble("altitude", loc.getAltitude());
 		
-		
-//		LONGITUDE = loc.getLongitude();
-//		ALTITUDE = loc.getAltitude();
-//		SPEED = loc.getSpeed();
-		
+		Log.d(TAG, "2" + loc.toString());		
 	}
 
 	public void subscribeToLocationUpdates() {
 	  this.locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
 	  this.locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+	  Log.d("LocationLoggerService", "onCreate:subscribeToLocationUpdates()");
 	}
 
 	@Override
