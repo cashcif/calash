@@ -99,7 +99,7 @@ public class RelativeTTS extends Activity implements TextToSpeech.OnInitListener
 		
     	pitchfactor = 2/(Math.PI);
 		maxvolume = audioMan.getStreamMaxVolume(AudioManager.STREAM_MUSIC) - 2;
-		minvolume = 1;
+		minvolume = 2;
     	checked = false;
     	pois = new ArrayList<POI>();
     	pois.clear();
@@ -111,21 +111,47 @@ public class RelativeTTS extends Activity implements TextToSpeech.OnInitListener
     	ttsmap.put(TextToSpeech.Engine.KEY_PARAM_STREAM, String.valueOf(AudioManager.STREAM_MUSIC));
 		ttsmap.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "voice");
     	
-//    	POI point1 = new POI("Chamber of Mines", 52, -26.1909, 29);
-//		POI point2 = new POI("Convergence Lab", 52, -26.1909, 28.0278);
-//		POI point3 = new POI("Matrix", 52, -26.1909, 26.0278);
-//		POI point4 = new POI("Tower of Light", 52, -26.1909, 28.278);
-    	POI point1 = new POI("Chamber of Mines", 120, -26.1913, 28.00278);
-		POI point2 = new POI("Convergence Lab", 23, -26.1910, 28.0278);
-		POI point3 = new POI("Matrix", 52, -26.1905, 28.0278);
-		POI point4 = new POI("Tower of Light", 1, -26.1908, 28.000378);
-		currentloc = new POI("Current Location",52 , -26.1909, 28.0278);
-
-		//currentloc = new POI("Current Location",LocationLoggerService.ALTITUDE , LocationLoggerService.LATITUDE, LocationLoggerService.LONGITUDE);
+////    	POI point1 = new POI("Chamber of Mines", 52, -26.1909, 29);
+////		POI point2 = new POI("Convergence Lab", 52, -26.1909, 28.0278);
+////		POI point3 = new POI("Matrix", 52, -26.1909, 26.0278);
+////		POI point4 = new POI("Tower of Light", 52, -26.1909, 28.278);
+//    	POI point1 = new POI("Chamber of Mines", 120, -26.1913, 28.00278);
+//		POI point2 = new POI("Convergence Lab", 23, -26.1910, 28.0278);
+//		POI point3 = new POI("Matrix", 52, -26.1905, 28.0278);
+//		POI point4 = new POI("Tower of Light", 1, -26.1908, 28.000378);
+//		currentloc = new POI("Current Location",52 , -26.1909, 28.0278);
+//
+//		//currentloc = new POI("Current Location",LocationLoggerService.ALTITUDE , LocationLoggerService.LATITUDE, LocationLoggerService.LONGITUDE);
+//		pois.add(point1);
+//		pois.add(point2);
+//		pois.add(point3);
+//		pois.add(point4);
+		currentloc = new POI("Test Location",1852 , -26.1924094, 28.03104222); 
+		POI point1 = new POI("Top of Stairs", 1802, -26.19246304, 28.03102076);
+		POI point2 = new POI("Bottom of Stairs", 1801, -26.19242549, 28.03101003);
+		POI point3 = new POI("Senate House", 1801, -26.19243622, 28.03095102);
+		POI point4 = new POI("Boom", 1789, -26.1924094, 28.0314821);
+		POI point5 = new POI("Chemistry Building Corner", 1789, -26.19237721, 28.03102612);
+		POI point6 = new POI("Chemistry Building", 1789, -26.19253278, 28.03102612);
+		POI point7 = new POI("Statue", 1789, -26.19251668, 28.03118169);
+		POI point8 = new POI("Digital Arts or Nunary", 1777, -26.19243622, 28.03232431);
+		POI point9 = new POI("Gate House", 1856, -26.19221677, 28.03201318);
+		POI point10 = new POI("Wits Theatre", 1783, -26.19248986, 28.03156793);
+		POI point11 = new POI("JCSE", 1870, -26.19281176, 28.03227791);
+		POI point12 = new POI("Oppenheimer Sciences", 1783, -26.19179785, 28.03233504);
+		pois = new ArrayList<POI>();
 		pois.add(point1);
 		pois.add(point2);
 		pois.add(point3);
 		pois.add(point4);
+		pois.add(point5);
+		pois.add(point6);
+		pois.add(point7);
+		pois.add(point8);
+		pois.add(point9);
+		pois.add(point10);
+		pois.add(point11);
+		pois.add(point12);
 		
 		// Real sensor manager
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
@@ -208,18 +234,21 @@ public class RelativeTTS extends Activity implements TextToSpeech.OnInitListener
 	}
 	
     private void speak(POI poi, int flushQueue) {
+    	float angle = (AzimuthBar.getProgress() + poi.bearingTo((Location) currentloc))%360;
+    	if(angle <= 90 || angle >= 270){
     		setPitch(poi);
     		setVolume(poi);
     		setBalance(poi);
     		tts.setSpeechRate(((float) SpeedBar.getProgress())/5);
     		finishedspeaking=false;
 			if(exp_checked)
-				tts.synthesizeToFile(poi.getName() + convertDirec(AzimuthBar.getProgress() + poi.bearingTo((Location) currentloc)) + fixDistance(poi.distanceTo(currentloc)+ DistanceBar.getProgress()) + fixElevation(poi.getAltitude()-currentloc.getAltitude()+ElevationBar.getProgress()), ttsmap, destfile);
+				tts.synthesizeToFile(poi.getName() + convertDirec(angle) + fixDistance(poi.distanceTo(currentloc)+ DistanceBar.getProgress()) + fixElevation(poi.getAltitude()-currentloc.getAltitude()+ElevationBar.getProgress()), ttsmap, destfile);
 				//tts.speak(poi.getName() + convertDirec(AzimuthBar.getProgress() + poi.bearingTo((Location) currentloc)) + fixDistance(poi.distanceTo(currentloc)+ DistanceBar.getProgress()) + fixElevation(poi.getAltitude()-currentloc.getAltitude()+ElevationBar.getProgress()), flushQueue, ttsmap);
 			else
-				tts.synthesizeToFile(poi.getName() + convertDirec(AzimuthBar.getProgress() + poi.bearingTo((Location) currentloc)), ttsmap, destfile);
+				tts.synthesizeToFile(poi.getName(), ttsmap, destfile);
 				//tts.speak(poi.getName() + convertDirec(AzimuthBar.getProgress() + poi.bearingTo((Location) currentloc)), flushQueue, ttsmap);
 			while(!finishedspeaking||mp.isPlaying());
+    	}
     }
     
     private String fixDistance (float distance)
@@ -261,7 +290,7 @@ public class RelativeTTS extends Activity implements TextToSpeech.OnInitListener
 			num = (float)0.1;
 		double angle = Math.atan((poi.getAltitude()-currentloc.getAltitude()+ ElevationBar.getProgress())/num);
 	//	double pitch = angle*pitchfactor + 1;
-			tts.setPitch((float) (angle*pitchfactor + 1));			
+			tts.setPitch((float) (angle*pitchfactor + 1));
     }
 	
 	private void setVolume(POI poi){
@@ -274,12 +303,11 @@ public class RelativeTTS extends Activity implements TextToSpeech.OnInitListener
 	}
 	
 	private void setBalance(POI poi){
-		float angle = AzimuthBar.getProgress() + poi.bearingTo((Location) currentloc);
-		int currentvol = audioMan.getStreamVolume(AudioManager.STREAM_MUSIC);
+		float angle = (AzimuthBar.getProgress() + poi.bearingTo((Location) currentloc))%360;
 		if(angle < 180 && angle > 0)
-			mp.setVolume((float) ((45-angle)/0.45*currentvol), currentvol);
+			mp.setVolume((float) ((90-angle)/90), 1);
 		else
-			mp.setVolume(currentvol, (float) ((45-angle)/0.45*currentvol));
+			mp.setVolume(1, (float) ((angle-270)/90));
 	}
 	
 	private String convertDirec(float azimuth) {
