@@ -2,11 +2,9 @@ package android.speech.tts.location;
 
 import java.util.TimerTask;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 
 
 public class LocationTimerTask extends TimerTask{

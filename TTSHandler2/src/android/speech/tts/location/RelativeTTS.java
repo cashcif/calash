@@ -7,8 +7,11 @@ import java.util.Locale;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -44,6 +47,9 @@ public class RelativeTTS extends Activity implements TextToSpeech.OnInitListener
 	private int maxvolume;
 	private int minvolume;
 	private String destfile;
+	double latitude;
+	double longitude;
+	double altitude;
 
 	private ArrayList<POI> pois;
 	private POI currentloc;
@@ -73,6 +79,10 @@ public class RelativeTTS extends Activity implements TextToSpeech.OnInitListener
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
 	    setContentView(R.layout.main);
+	    
+		LocationReceiver locationReceiver = new LocationReceiver();
+		registerReceiver(locationReceiver, new IntentFilter(
+				LocationLoggerService.BROADCAST_LOCATION_MEASUREMENTS));
 	    
 		tts = new TextToSpeech(this, this);
 		mp = new MediaPlayer();
@@ -111,22 +121,8 @@ public class RelativeTTS extends Activity implements TextToSpeech.OnInitListener
     	ttsmap.put(TextToSpeech.Engine.KEY_PARAM_STREAM, String.valueOf(AudioManager.STREAM_MUSIC));
 		ttsmap.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "voice");
     	
-////    	POI point1 = new POI("Chamber of Mines", 52, -26.1909, 29);
-////		POI point2 = new POI("Convergence Lab", 52, -26.1909, 28.0278);
-////		POI point3 = new POI("Matrix", 52, -26.1909, 26.0278);
-////		POI point4 = new POI("Tower of Light", 52, -26.1909, 28.278);
-//    	POI point1 = new POI("Chamber of Mines", 120, -26.1913, 28.00278);
-//		POI point2 = new POI("Convergence Lab", 23, -26.1910, 28.0278);
-//		POI point3 = new POI("Matrix", 52, -26.1905, 28.0278);
-//		POI point4 = new POI("Tower of Light", 1, -26.1908, 28.000378);
-//		currentloc = new POI("Current Location",52 , -26.1909, 28.0278);
-//
-//		//currentloc = new POI("Current Location",LocationLoggerService.ALTITUDE , LocationLoggerService.LATITUDE, LocationLoggerService.LONGITUDE);
-//		pois.add(point1);
-//		pois.add(point2);
-//		pois.add(point3);
-//		pois.add(point4);
-		currentloc = new POI("Test Location",1852 , -26.1924094, 28.03104222); 
+		currentloc = new POI("Test Location", altitude,latitude,longitude); 
+		//currentloc = new POI("Test Location",1852 , -26.1924094, 28.03104222); 
 		POI point1 = new POI("Top of Stairs", 1802, -26.19246304, 28.03102076);
 		POI point2 = new POI("Bottom of Stairs", 1801, -26.19242549, 28.03101003);
 		POI point3 = new POI("Senate House", 1801, -26.19243622, 28.03095102);
@@ -345,22 +341,22 @@ public class RelativeTTS extends Activity implements TextToSpeech.OnInitListener
 		try {
 			mp.setDataSource(destfile);
 		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		} catch (IllegalStateException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
 		try {
 			mp.prepare();
 		} catch (IllegalStateException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
         mp.start();
@@ -391,12 +387,12 @@ public class RelativeTTS extends Activity implements TextToSpeech.OnInitListener
 		
 		@Override
 		public void onStopTrackingTouch(SeekBar arg0) {
-			// TODO Auto-generated method stub
+			
 		}
 		
 		@Override
 		public void onStartTrackingTouch(SeekBar arg0) {
-			// TODO Auto-generated method stub
+			
 		}
 		
 		@Override
@@ -412,12 +408,12 @@ public class RelativeTTS extends Activity implements TextToSpeech.OnInitListener
 		
 		@Override
 		public void onStopTrackingTouch(SeekBar arg0) {
-			// TODO Auto-generated method stub
+			
 		}
 		
 		@Override
 		public void onStartTrackingTouch(SeekBar arg0) {
-			// TODO Auto-generated method stub
+			
 		}
 		
 		@Override
@@ -428,7 +424,7 @@ public class RelativeTTS extends Activity implements TextToSpeech.OnInitListener
 
 @Override
 	public void onAccuracyChanged(Sensor sensor, int accuracy) {
-	// TODO Auto-generated method stub
+	
 	
 }
 
@@ -524,4 +520,20 @@ public class RelativeTTS extends Activity implements TextToSpeech.OnInitListener
 					return super.onOptionsItemSelected(item);
 				}
 			}
+			private class LocationReceiver extends BroadcastReceiver{
+
+
+				@Override
+				public void onReceive(Context context, Intent intent) {
+					
+					latitude = intent.getDoubleExtra("latitude", -26.1912118495368958);
+					longitude = intent.getDoubleExtra("longitude", 28.027008175869915);
+					altitude = intent.getDoubleExtra("altitude", 1781);
+					currentloc.setLatitude(latitude);
+					currentloc.setLongitude(longitude);
+					currentloc.setAltitude(altitude);
+
+				}
+			
+		}
 }

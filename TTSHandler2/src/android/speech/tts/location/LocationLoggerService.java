@@ -79,39 +79,12 @@ public class LocationLoggerService  extends Service implements LocationListener{
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-
 		Toast.makeText(this, "Service Destroyed", Toast.LENGTH_LONG).show();
-
 	}
 
 	@Override
 	public void onStart(Intent intent, int startId) {
-
 		super.onStart(intent, startId);
-
 		Toast.makeText(this, "Service Started", Toast.LENGTH_LONG).show();
-
 	}
-
 }
-
-//public void run() {
-//Log.i("Thread Running", "Location listening thread");
-//
-//locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-////showLocation(locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER));
-//if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER))
-//	locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0,this);
-//if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER))
-//	locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
-//
-//while (true) {
-//	try {
-//		
-//		Log.i("Location Thread", "Latitude: " + LATITUDE + " , "
-//				+ "Latitude: " + LONGITUDE);
-//	} catch (InterruptedException e) {
-//		Log.e("Error", e.getMessage());
-//	}
-//}
-//}

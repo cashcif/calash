@@ -30,7 +30,6 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.RadioButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class SimpleTTS extends Activity implements TextToSpeech.OnInitListener, TextToSpeech.OnUtteranceCompletedListener, ITTS, SensorEventListener {
 	private TextToSpeech tts;
@@ -64,13 +63,13 @@ public class SimpleTTS extends Activity implements TextToSpeech.OnInitListener, 
 	private SensorManager sensorManager;
 
 	
-	private float[] compassPoints;
-	private float currentSpeechRate;
+	public float[] compassPoints;
+//	private float currentSpeechRate;
 	private boolean finishedspeaking;
 
-	private float maxspeechrate;
-	private float minspeechrate;
-	private long lastUpdate;
+	public float maxspeechrate;
+	public float minspeechrate;
+	public long lastUpdate;
 	
 	private HashMap<String, String> ttsmap;
 	
@@ -83,10 +82,6 @@ public class SimpleTTS extends Activity implements TextToSpeech.OnInitListener, 
 		LocationReceiver locationReceiver = new LocationReceiver();
 		registerReceiver(locationReceiver, new IntentFilter(
 				LocationLoggerService.BROADCAST_LOCATION_MEASUREMENTS));
-//		
-//		double alt = LocationLoggerService.ALTITUDE;
-//		double lat = LocationLoggerService.LATITUDE;
-//		double longit = LocationLoggerService.LONGITUDE;
 		
 		AzimuthBar = (SeekBar) findViewById(R.id.SeekBarAzimuth);
 		DistanceBar = (SeekBar) findViewById(R.id.SeekBarDistance);
@@ -126,28 +121,8 @@ public class SimpleTTS extends Activity implements TextToSpeech.OnInitListener, 
 		SpeedBar.setOnSeekBarChangeListener(SpeedSeekBarChangeListener);
 		VolumeBar.setOnSeekBarChangeListener(SpeedSeekBarChangeListener);
 
-
-////    	POI point1 = new POI("Chamber of Mines", 52, -26.1909, 29);
-////		POI point2 = new POI("Convergence Lab", 52, -26.1909, 28.0278);
-////		POI point3 = new POI("Matrix", 52, -26.1909, 26.0278);
-////		POI point4 = new POI("Tower of Light", 52, -26.1909, 28.278);
-//    	POI point1 = new POI("Chamber of Mines", 120, -26.1913, 28.00278);
-//		POI point2 = new POI("Convergence Lab", 23, -26.1910, 28.0278);
-//		POI point3 = new POI("Matrix", 52, -26.1905, 28.0278);
-//		POI point4 = new POI("Tower of Light", 1, -26.1908, 28.000378);
-//	//	currentloc = new POI("Current Location",52 , -26.1909, 28.0278);
-//		
-//		currentloc = new POI("Current Location",LocationLoggerService.ALTITUDE , LocationLoggerService.LATITUDE, LocationLoggerService.LONGITUDE);
-//		
-//		pois = new ArrayList<POI>();
-//
-//		pois.add(point1);
-//		pois.add(point2);
-//		pois.add(point3);
-//		pois.add(point4);
-
-
-		currentloc = new POI("Test Location",1802 , -26.1924094, 28.03104222); 
+		currentloc = new POI("Test Location", altitude,latitude,longitude); 
+		//currentloc = new POI("Test Location",1852 , -26.1924094, 28.03104222);
 		POI point1 = new POI("Top of Stairs", 1802, -26.19246304, 28.03102076);
 		POI point2 = new POI("Bottom of Stairs", 1801, -26.19242549, 28.03101003);
 		POI point3 = new POI("Senate House", 1801, -26.19243622, 28.03095102);
@@ -306,10 +281,10 @@ public class SimpleTTS extends Activity implements TextToSpeech.OnInitListener, 
 	private SeekBar.OnSeekBarChangeListener SpatialSeekBarChangeListener = new SeekBar.OnSeekBarChangeListener() {
 		@Override
 	public void onStopTrackingTouch(SeekBar arg0) {
-			// TODO Auto-generated method stub
+			
 		}
 	public void onStartTrackingTouch(SeekBar arg0) {
-			// TODO Auto-generated method stub
+
 		}
 	public void onProgressChanged(SeekBar arg0, int arg1, boolean arg2) {
 			AzimuthText.setText("Azimuth: " + AzimuthBar.getProgress());
@@ -323,12 +298,12 @@ public class SimpleTTS extends Activity implements TextToSpeech.OnInitListener, 
 
 		@Override
 		public void onStopTrackingTouch(SeekBar arg0) {
-			// TODO Auto-generated method stub
+			
 		}
 
 		@Override
 		public void onStartTrackingTouch(SeekBar arg0) {
-			// TODO Auto-generated method stub
+			
 		}
 
 		@Override
@@ -345,17 +320,15 @@ public class SimpleTTS extends Activity implements TextToSpeech.OnInitListener, 
 
 	@Override
 	public void onAccuracyChanged(Sensor arg0, int arg1) {
-		// TODO Auto-generated method stub
+		
 
 	}
 	@Override
 	public void onSensorChanged(SensorEvent event) {
 		compassPoints = event.values;
-		currentloc.setLatitude(latitude);
-		currentloc.setLongitude(longitude);
-		currentloc.setAltitude(altitude);
-		Toast.makeText(SimpleTTS.this, "LAT: " + Double.valueOf(latitude) + " LONG: " + Double.valueOf(longitude) + " ALT: " + Double.valueOf(altitude), Toast.LENGTH_LONG).show();
-		int num = compassPoints.length;
+
+//		Toast.makeText(SimpleTTS.this, "LAT: " + Double.valueOf(latitude) + " LONG: " + Double.valueOf(longitude) + " ALT: " + Double.valueOf(altitude), Toast.LENGTH_LONG).show();
+//		int num = compassPoints.length;
 //		if(event.sensor.getType() == Sensor.TYPE_ORIENTATION)
 //	      {
 			AzimuthBar.setProgress((int)event.values[0]);
@@ -464,11 +437,13 @@ public class SimpleTTS extends Activity implements TextToSpeech.OnInitListener, 
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			
-			latitude = intent.getDoubleExtra("latitude", 0.0);
-			longitude = intent.getDoubleExtra("longitude", 0.0);
-			altitude = intent.getDoubleExtra("altitude", 0.0);
-
+			latitude = intent.getDoubleExtra("latitude", -26.1912118495368958);
+			longitude = intent.getDoubleExtra("longitude", 28.027008175869915);
+			altitude = intent.getDoubleExtra("altitude", 1781);
+			currentloc.setLatitude(latitude);
+			currentloc.setLongitude(longitude);
+			currentloc.setAltitude(altitude);
 		}
-
+	
 }
 }
