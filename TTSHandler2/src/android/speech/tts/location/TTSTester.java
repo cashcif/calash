@@ -1,7 +1,6 @@
 package android.speech.tts.location;
 
 import android.app.Activity;
-import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,12 +19,17 @@ public class TTSTester extends Activity{
 	    Log.v(TAG, "Start up screen");
 	    Button buttonEnter = (Button) findViewById(R.id.buttonEnter);
 	    
-		ComponentName comp = new ComponentName(getPackageName(),   LocationLoggerService.class.getName());
-		ComponentName service = startService(new Intent().setComponent(comp));
+	    Intent serviceIntent = new Intent();
+		serviceIntent.setAction("android.speech.tts.location.LocationLogggerService");
+		startService(serviceIntent);
+		
+//		ComponentName comp = new ComponentName(getPackageName(),   LocationLoggerService.class.getName());
+//		ComponentName service = startService(new Intent().setComponent(comp));
 	    
 	    buttonEnter.setOnClickListener(new OnClickListener() {
 	    	public void onClick(View v) {
 	   Intent simpleTTS = new Intent(TTSTester.this, SimpleTTS.class);
+	    		//  Intent simpleTTS = new Intent(TTSTester.this, RelativeTTS.class);
 	startActivity(simpleTTS);
 	    	}
 	    });

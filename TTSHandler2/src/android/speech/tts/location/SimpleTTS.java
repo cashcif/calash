@@ -6,8 +6,11 @@ import java.util.Locale;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -31,6 +34,8 @@ import android.widget.TextView;
 public class SimpleTTS extends Activity implements TextToSpeech.OnInitListener, TextToSpeech.OnUtteranceCompletedListener, ITTS, SensorEventListener {
 	private TextToSpeech tts;
 
+	
+
 	private SeekBar AzimuthBar;
 	private SeekBar DistanceBar;
 	private SeekBar ElevationBar;
@@ -51,6 +56,9 @@ public class SimpleTTS extends Activity implements TextToSpeech.OnInitListener, 
 	private AudioManager audioMan;
 	private POI currentloc;
 	private boolean checked;
+	double latitude;
+	double longitude;
+	double altitude;
 	
 	private SensorManager sensorManager;
 
@@ -71,9 +79,10 @@ public class SimpleTTS extends Activity implements TextToSpeech.OnInitListener, 
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 		
-//		ComponentName comp = new ComponentName(getPackageName(),   LocationLoggerService.class.getName());
-//		ComponentName service = startService(new Intent().setComponent(comp));
-		
+		LocationReceiver locationReceiver = new LocationReceiver();
+		registerReceiver(locationReceiver, new IntentFilter(
+				LocationLoggerService.BROADCAST_LOCATION_MEASUREMENTS));
+//		
 //		double alt = LocationLoggerService.ALTITUDE;
 //		double lat = LocationLoggerService.LATITUDE;
 //		double longit = LocationLoggerService.LONGITUDE;
@@ -126,7 +135,8 @@ public class SimpleTTS extends Activity implements TextToSpeech.OnInitListener, 
 		POI point4 = new POI("Tower of Light", 1, -26.1908, 28.000378);
 	//	currentloc = new POI("Current Location",52 , -26.1909, 28.0278);
 		
-		currentloc = new POI("Current Location",LocationLoggerService.ALTITUDE , LocationLoggerService.LATITUDE, LocationLoggerService.LONGITUDE);
+	//	currentloc = new POI("Current Location",LocationLoggerService.ALTITUDE , LocationLoggerService.LATITUDE, LocationLoggerService.LONGITUDE);
+		currentloc = new POI("Current Location", altitude,latitude,longitude);
 		
 		pois = new ArrayList<POI>();
 
@@ -412,4 +422,18 @@ public class SimpleTTS extends Activity implements TextToSpeech.OnInitListener, 
 		}
 	}
 
+
+	private class LocationReceiver extends BroadcastReceiver{
+
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			
+			latitude = intent.getDoubleExtra("Latitude", 0.0);
+			longitude = intent.getDoubleExtra("Longitude", 0.0);
+			altitude = intent.getDoubleExtra("Altitude", 0.0);
+
+		}
+
+}
 }

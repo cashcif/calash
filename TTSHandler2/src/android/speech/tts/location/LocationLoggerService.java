@@ -1,7 +1,8 @@
 package android.speech.tts.location;
 
+import java.util.Timer;
+
 import android.app.Service;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
@@ -10,6 +11,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
+import android.widget.Toast;
 
 public class LocationLoggerService  extends Service implements LocationListener{
 	public static double LATITUDE;
@@ -17,27 +19,36 @@ public class LocationLoggerService  extends Service implements LocationListener{
 	public static double ALTITUDE;
 	public static float SPEED;
 	
+	public static final String BROADCAST_LOCATION_MEASUREMENTS = "service.Geopoint";
+	private Bundle geoPointBundle;
+	
 	 private final static String TAG = "LocationLoggerService";
 	 LocationManager locationManager;
-//	 GPXWriter writer;
+	 
 	 
 	 @Override
 	 public void onCreate() {
+		 Toast.makeText(this, "Service Created", Toast.LENGTH_LONG).show();
 	  subscribeToLocationUpdates();
+	  LocationTimerTask geoTimer = new LocationTimerTask(geoPointBundle, this);
+	  Timer locationMeasurements = new Timer();
+		locationMeasurements.schedule(geoTimer , 1000, 1000);
 	 }
+	 
+	
 	 
 	@Override
 	public void onLocationChanged(Location loc) {
 		Log.d(TAG, loc.toString());
-//	     ContentValues values = new ContentValues();
-//	        values.put(GPSData.GPSPoint.LONGITUDE, loc.getLongitude());
-//	        values.put(GPSData.GPSPoint.LATITUDE, loc.getLatitude());
-//	        values.put(GPSData.GPSPoint.TIME, loc.getTime());
-//	     getContentResolver().insert(GPSDataContentProvider.CONTENT_URI, values);
-		LATITUDE = loc.getLatitude();
-		LONGITUDE = loc.getLongitude();
-		ALTITUDE = loc.getAltitude();
-		SPEED = loc.getSpeed();
+		geoPointBundle.putDouble("Latitude", loc.getLatitude());
+		geoPointBundle.putDouble("Longitude", loc.getLongitude());
+		geoPointBundle.putDouble("Altitude", loc.getAltitude());
+		
+		
+		
+//		LONGITUDE = loc.getLongitude();
+//		ALTITUDE = loc.getAltitude();
+//		SPEED = loc.getSpeed();
 		
 	}
 
@@ -64,6 +75,23 @@ public class LocationLoggerService  extends Service implements LocationListener{
 	public void onStatusChanged(String arg0, int arg1, Bundle arg2) {
 	
 	}
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+
+		Toast.makeText(this, "Service Destroyed", Toast.LENGTH_LONG).show();
+
+	}
+
+	@Override
+	public void onStart(Intent intent, int startId) {
+
+		super.onStart(intent, startId);
+
+		Toast.makeText(this, "Service Started", Toast.LENGTH_LONG).show();
+
+	}
+
 }
 
 //public void run() {

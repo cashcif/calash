@@ -3,10 +3,30 @@
       package="android.speech.tts.location"
       android:versionCode="1"
       android:versionName="1.0">
+      
     <application android:icon="@drawable/icon" 
     android:label="@string/app_name" 
     android:debuggable="true"
     android:screenOrientation="portrait">
+	<service android:name=".LocationLoggerService" 
+		   android:enabled="true" 
+		   android:exported="true"	
+		   android:process=":LocationProcess"
+		   android:label="LocationLoggerService">
+		  <intent-filter>
+				<action android:name="android.speech.tts.location.LocationLogggerService" />
+			</intent-filter>
+		</service>
+		   
+		   <receiver android:name=".LocationLoggerServiceManager" 
+		 android:enabled="true" 
+		 android:exported="true"
+		 android:label="LocationLoggerServiceManager">
+		 		    <intent-filter>
+		        <action android:name="android.intent.action.BOOT_COMPLETED" />
+		        
+		    </intent-filter>
+		</receiver>
         <activity android:name=".TTSTester"
                   android:label="@string/app_name"
                   android:theme="@android:style/Theme.Light.NoTitleBar"
@@ -15,10 +35,6 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        <service android:name="LocationLoggerService" 
-		   android:enabled="true" 
-		   android:exported="false"
-		   android:label="LocationLoggerService" />
         </activity>
         <activity android:name="SimpleTTS"
         android:screenOrientation="portrait"></activity>
@@ -26,14 +42,8 @@
         android:screenOrientation="portrait"></activity>
         <activity android:name="AbsoluteTTS"
         android:screenOrientation="portrait"></activity>
-        <receiver android:name=".LocationLoggerServiceManager" 
-		 android:enabled="true" 
-		 android:exported="false"
-		 android:label="LocationLoggerServiceManager">
-		    <intent-filter>
-		        <action android:name="android.intent.action.BOOT_COMPLETED" />
-		    </intent-filter>
-</receiver>
+
+ 
     </application> 
     <uses-permission android:name="android.permission.ACCESS_LOCATION" />
 	<uses-permission android:name="android.permission.ACCESS_GPS" />    

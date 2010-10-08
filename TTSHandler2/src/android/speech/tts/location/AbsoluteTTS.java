@@ -95,11 +95,11 @@ public class AbsoluteTTS extends Activity implements TextToSpeech.OnInitListener
 //		POI point2 = new POI("Convergence Lab", 52, -26.1909, 28.0278);
 //		POI point3 = new POI("Matrix", 52, -26.1909, 26.0278);
 //		POI point4 = new POI("Tower of Light", 52, -26.1909, 28.278);
-    	POI point1 = new POI("Chamber of Mines", 120, -26.1913, 28.00278);
+    	POI point1 = new POI("Chamber of Mines", 1200, -26.1913, 28.00278);
 		POI point2 = new POI("Convergence Lab", 23, -26.1910, 28.0278);
 		POI point3 = new POI("Matrix", 52, -26.1905, 28.0278);
 		POI point4 = new POI("Tower of Light", 1, -26.1908, 28.000378);
-		currentloc = new POI("Current Location",52 , -26.1909, 28.0278);
+		currentloc = new POI("Current Location",520 , -26.1909, 28.0278);
 		//currentloc = new POI("Current Location",LocationLoggerService.ALTITUDE , LocationLoggerService.LATITUDE, LocationLoggerService.LONGITUDE);
 		pois.add(point1);
 		pois.add(point2);
