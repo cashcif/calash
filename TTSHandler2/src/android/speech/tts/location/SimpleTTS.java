@@ -125,26 +125,53 @@ public class SimpleTTS extends Activity implements TextToSpeech.OnInitListener, 
 		SpeedBar.setOnSeekBarChangeListener(SpeedSeekBarChangeListener);
 		VolumeBar.setOnSeekBarChangeListener(SpeedSeekBarChangeListener);
 
-//    	POI point1 = new POI("Chamber of Mines", 52, -26.1909, 29);
-//		POI point2 = new POI("Convergence Lab", 52, -26.1909, 28.0278);
-//		POI point3 = new POI("Matrix", 52, -26.1909, 26.0278);
-//		POI point4 = new POI("Tower of Light", 52, -26.1909, 28.278);
-    	POI point1 = new POI("Chamber of Mines", 120, -26.1913, 28.00278);
-		POI point2 = new POI("Convergence Lab", 23, -26.1910, 28.0278);
-		POI point3 = new POI("Matrix", 52, -26.1905, 28.0278);
-		POI point4 = new POI("Tower of Light", 1, -26.1908, 28.000378);
-	//	currentloc = new POI("Current Location",52 , -26.1909, 28.0278);
-		
-	//	currentloc = new POI("Current Location",LocationLoggerService.ALTITUDE , LocationLoggerService.LATITUDE, LocationLoggerService.LONGITUDE);
-		currentloc = new POI("Current Location", altitude,latitude,longitude);
-		
-		pois = new ArrayList<POI>();
 
+////    	POI point1 = new POI("Chamber of Mines", 52, -26.1909, 29);
+////		POI point2 = new POI("Convergence Lab", 52, -26.1909, 28.0278);
+////		POI point3 = new POI("Matrix", 52, -26.1909, 26.0278);
+////		POI point4 = new POI("Tower of Light", 52, -26.1909, 28.278);
+//    	POI point1 = new POI("Chamber of Mines", 120, -26.1913, 28.00278);
+//		POI point2 = new POI("Convergence Lab", 23, -26.1910, 28.0278);
+//		POI point3 = new POI("Matrix", 52, -26.1905, 28.0278);
+//		POI point4 = new POI("Tower of Light", 1, -26.1908, 28.000378);
+//	//	currentloc = new POI("Current Location",52 , -26.1909, 28.0278);
+//		
+//		currentloc = new POI("Current Location",LocationLoggerService.ALTITUDE , LocationLoggerService.LATITUDE, LocationLoggerService.LONGITUDE);
+//		
+//		pois = new ArrayList<POI>();
+//
+//		pois.add(point1);
+//		pois.add(point2);
+//		pois.add(point3);
+//		pois.add(point4);
+
+
+		currentloc = new POI("Test Location",1802 , -26.1924094, 28.03104222); 
+		POI point1 = new POI("Top of Stairs", 1802, -26.19246304, 28.03102076);
+		POI point2 = new POI("Bottom of Stairs", 1801, -26.19242549, 28.03101003);
+		POI point3 = new POI("Senate House", 1801, -26.19243622, 28.03095102);
+		POI point4 = new POI("Boom", 1789, -26.1924094, 28.0314821);
+		POI point5 = new POI("Chemistry Building Corner", 1789, -26.19237721, 28.03102612);
+		POI point6 = new POI("Chemistry Building", 1789, -26.19253278, 28.03102612);
+		POI point7 = new POI("Statue", 1789, -26.19251668, 28.03118169);
+		POI point8 = new POI("Digital Arts or Nunary", 1777, -26.19243622, 28.03232431);
+		POI point9 = new POI("Gate House", 1856, -26.19221677, 28.03201318);
+		POI point10 = new POI("Wits Theatre", 1783, -26.19248986, 28.03156793);
+		POI point11 = new POI("JCSE", 1870, -26.19281176, 28.03227791);
+		POI point12 = new POI("Oppenheimer Sciences", 1783, -26.19179785, 28.03233504);
+		pois = new ArrayList<POI>();
 		pois.add(point1);
 		pois.add(point2);
 		pois.add(point3);
 		pois.add(point4);
-
+		pois.add(point5);
+		pois.add(point6);
+		pois.add(point7);
+		pois.add(point8);
+		pois.add(point9);
+		pois.add(point10);
+		pois.add(point11);
+		pois.add(point12);
 		sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 		
 		RelativeRB.setOnClickListener(new View.OnClickListener() {
