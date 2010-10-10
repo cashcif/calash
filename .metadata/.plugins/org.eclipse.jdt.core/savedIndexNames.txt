@@ -1,0 +1,3 @@
+INDEX VERSION 1.126+C:\Documents and Settings\Frost Shattering\My Documents\My Dropbox\Lab Project\.metadata\.plugins\org.eclipse.jdt.core
+2114630763.index
+304353007.index
