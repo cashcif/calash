@@ -116,26 +116,7 @@ public class SimpleTTS extends Activity implements TextToSpeech.OnInitListener, 
 		SpeedBar.setOnSeekBarChangeListener(SpeedSeekBarChangeListener);
 		VolumeBar.setOnSeekBarChangeListener(SpeedSeekBarChangeListener);
 
-////    	POI point1 = new POI("Chamber of Mines", 52, -26.1909, 29);
-////		POI point2 = new POI("Convergence Lab", 52, -26.1909, 28.0278);
-////		POI point3 = new POI("Matrix", 52, -26.1909, 26.0278);
-////		POI point4 = new POI("Tower of Light", 52, -26.1909, 28.278);
-//    	POI point1 = new POI("Chamber of Mines", 120, -26.1913, 28.00278);
-//		POI point2 = new POI("Convergence Lab", 23, -26.1910, 28.0278);
-//		POI point3 = new POI("Matrix", 52, -26.1905, 28.0278);
-//		POI point4 = new POI("Tower of Light", 1, -26.1908, 28.000378);
-//	//	currentloc = new POI("Current Location",52 , -26.1909, 28.0278);
-//		
-//		currentloc = new POI("Current Location",LocationLoggerService.ALTITUDE , LocationLoggerService.LATITUDE, LocationLoggerService.LONGITUDE);
-//		
-//		pois = new ArrayList<POI>();
-//
-//		pois.add(point1);
-//		pois.add(point2);
-//		pois.add(point3);
-//		pois.add(point4);
-
-		currentloc = new POI("Test Location",1802 , -26.1924094, 28.03104222); 
+		/*currentloc = new POI("Test Location",1802 , -26.1924094, 28.03104222); 
 		POI point1 = new POI("Top of Stairs", 1802, -26.19246304, 28.03102076);
 		POI point2 = new POI("Bottom of Stairs", 1801, -26.19242549, 28.03101003);
 		POI point3 = new POI("Senate House", 1801, -26.19243622, 28.03095102);
@@ -147,7 +128,20 @@ public class SimpleTTS extends Activity implements TextToSpeech.OnInitListener, 
 		POI point9 = new POI("Gate House", 1856, -26.19221677, 28.03201318);
 		POI point10 = new POI("Wits Theatre", 1783, -26.19248986, 28.03156793);
 		POI point11 = new POI("JCSE", 1870, -26.19281176, 28.03227791);
-		POI point12 = new POI("Oppenheimer Sciences", 1783, -26.19179785, 28.03233504);
+		POI point12 = new POI("Oppenheimer Sciences", 1783, -26.19179785, 28.03233504);*/
+		
+		currentloc = new POI("Current Location", 1781, -26.191319495368958, 28.027108175849915);
+		POI point1 = new POI("Tower of Light", 1795, -26.18977487312729, 28.025943338871002);
+		POI point2 = new POI("Swimming Pool", 1760, -26.189932847801174, 28.030063211917877);
+		POI point3 = new POI("Bus Depot", 1760, -26.19110284575957, 28.024309873580933);
+		POI point4 = new POI("Careers Centre", 1765, -26.19095121610493, 28.026949167251587);
+		POI point5 = new POI("First National Bank Building", 1755, -26.18859972778403, 28.026326894760132);
+		POI point6 = new POI("Hockey Astro", 1740, -26.18641426926645, 28.034706115722656);
+		POI point7 = new POI("Tennis Courts", 1760, -26.187713996232958, 28.032227754592896);
+		POI point8 = new POI("First Year Parking", 1745, -26.18538410500014, 28.02638053894043);
+		POI point9 = new POI("Residence", 1745, -26.186963044643104, 28.025457859039307);
+		POI point10 = new POI("Gas works", 1775, -26.18807984268992, 28.019492626190186);
+		POI point11 = new POI("Main Library", 1765, -26.190505953279867,28.030951023101807);
 		pois = new ArrayList<POI>();
 		pois.add(point1);
 		pois.add(point2);
@@ -160,7 +154,7 @@ public class SimpleTTS extends Activity implements TextToSpeech.OnInitListener, 
 		pois.add(point9);
 		pois.add(point10);
 		pois.add(point11);
-		pois.add(point12);
+		//pois.add(point12);
 		sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 		
 		RelativeRB.setOnClickListener(new View.OnClickListener() {
@@ -300,7 +294,6 @@ public class SimpleTTS extends Activity implements TextToSpeech.OnInitListener, 
 			AzimuthText.setText("Azimuth: " + AzimuthBar.getProgress());
 			DistanceText.setText("Distance: " + DistanceBar.getProgress());
 			ElevationText.setText("Elevation: " + ElevationBar.getProgress());
-
 		}
 	};
 
@@ -410,6 +403,7 @@ public class SimpleTTS extends Activity implements TextToSpeech.OnInitListener, 
 								public void onClick(DialogInterface dialog,
 										int id) {
 									dialog.cancel();
+									
 								}
 							});
 			AlertDialog help = builderHelp.create();
