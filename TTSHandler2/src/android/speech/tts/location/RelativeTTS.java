@@ -192,7 +192,7 @@ public class RelativeTTS extends Activity implements TextToSpeech.OnInitListener
 				if (SpeakButton.getText() == "Stop")
 				{
 				SpeakButton.setText("Speak");
-				tts.stop();
+			//	tts.stop();
 				}
 			else
 			{
