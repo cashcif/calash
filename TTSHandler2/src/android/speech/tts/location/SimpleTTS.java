@@ -6,8 +6,11 @@ import java.util.Locale;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -30,7 +33,6 @@ import android.widget.TextView;
 
 public class SimpleTTS extends Activity implements TextToSpeech.OnInitListener, TextToSpeech.OnUtteranceCompletedListener, ITTS, SensorEventListener {
 	private TextToSpeech tts;
-
 	private SeekBar AzimuthBar;
 	private SeekBar DistanceBar;
 	private SeekBar ElevationBar;
@@ -51,17 +53,20 @@ public class SimpleTTS extends Activity implements TextToSpeech.OnInitListener, 
 	private AudioManager audioMan;
 	private POI currentloc;
 	private boolean checked;
+	double latitude;
+	double longitude;
+	double altitude;
 	
 	private SensorManager sensorManager;
 
 	
-	private float[] compassPoints;
-	private float currentSpeechRate;
+	public float[] compassPoints;
+//	private float currentSpeechRate;
 	private boolean finishedspeaking;
 
-	private float maxspeechrate;
-	private float minspeechrate;
-	private long lastUpdate;
+	public float maxspeechrate;
+	public float minspeechrate;
+	public long lastUpdate;
 	
 	private HashMap<String, String> ttsmap;
 	
@@ -71,12 +76,9 @@ public class SimpleTTS extends Activity implements TextToSpeech.OnInitListener, 
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 		
-//		ComponentName comp = new ComponentName(getPackageName(),   LocationLoggerService.class.getName());
-//		ComponentName service = startService(new Intent().setComponent(comp));
-		
-//		double alt = LocationLoggerService.ALTITUDE;
-//		double lat = LocationLoggerService.LATITUDE;
-//		double longit = LocationLoggerService.LONGITUDE;
+		LocationReceiver locationReceiver = new LocationReceiver();
+		registerReceiver(locationReceiver, new IntentFilter(
+				LocationLoggerService.BROADCAST_LOCATION_MEASUREMENTS));
 		
 		AzimuthBar = (SeekBar) findViewById(R.id.SeekBarAzimuth);
 		DistanceBar = (SeekBar) findViewById(R.id.SeekBarDistance);
@@ -117,6 +119,12 @@ public class SimpleTTS extends Activity implements TextToSpeech.OnInitListener, 
 		VolumeBar.setOnSeekBarChangeListener(SpeedSeekBarChangeListener);
 
 		/*currentloc = new POI("Test Location",1802 , -26.1924094, 28.03104222); 
+=======
+		VolumeBar.setOnSeekBarChangeListener(SpeedSeekBarChangeListener);
+
+		currentloc = new POI("Test Location", altitude,latitude,longitude); 
+		//currentloc = new POI("Test Location",1852 , -26.1924094, 28.03104222);
+>>>>>>> 41641447ac5f34c553b8f07e0b387bffef373a6b
 		POI point1 = new POI("Top of Stairs", 1802, -26.19246304, 28.03102076);
 		POI point2 = new POI("Bottom of Stairs", 1801, -26.19242549, 28.03101003);
 		POI point3 = new POI("Senate House", 1801, -26.19243622, 28.03095102);
@@ -155,6 +163,7 @@ public class SimpleTTS extends Activity implements TextToSpeech.OnInitListener, 
 		pois.add(point10);
 		pois.add(point11);
 		//pois.add(point12);
+		
 		sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 		
 		RelativeRB.setOnClickListener(new View.OnClickListener() {
@@ -285,10 +294,10 @@ public class SimpleTTS extends Activity implements TextToSpeech.OnInitListener, 
 	private SeekBar.OnSeekBarChangeListener SpatialSeekBarChangeListener = new SeekBar.OnSeekBarChangeListener() {
 		@Override
 	public void onStopTrackingTouch(SeekBar arg0) {
-			// TODO Auto-generated method stub
+			
 		}
 	public void onStartTrackingTouch(SeekBar arg0) {
-			// TODO Auto-generated method stub
+
 		}
 	public void onProgressChanged(SeekBar arg0, int arg1, boolean arg2) {
 			AzimuthText.setText("Azimuth: " + AzimuthBar.getProgress());
@@ -301,12 +310,12 @@ public class SimpleTTS extends Activity implements TextToSpeech.OnInitListener, 
 
 		@Override
 		public void onStopTrackingTouch(SeekBar arg0) {
-			// TODO Auto-generated method stub
+			
 		}
 
 		@Override
 		public void onStartTrackingTouch(SeekBar arg0) {
-			// TODO Auto-generated method stub
+			
 		}
 
 		@Override
@@ -323,13 +332,15 @@ public class SimpleTTS extends Activity implements TextToSpeech.OnInitListener, 
 
 	@Override
 	public void onAccuracyChanged(Sensor arg0, int arg1) {
-		// TODO Auto-generated method stub
+		
 
 	}
 	@Override
 	public void onSensorChanged(SensorEvent event) {
 		compassPoints = event.values;
-		int num = compassPoints.length;
+
+//		Toast.makeText(SimpleTTS.this, "LAT: " + Double.valueOf(latitude) + " LONG: " + Double.valueOf(longitude) + " ALT: " + Double.valueOf(altitude), Toast.LENGTH_LONG).show();
+//		int num = compassPoints.length;
 //		if(event.sensor.getType() == Sensor.TYPE_ORIENTATION)
 //	      {
 			AzimuthBar.setProgress((int)event.values[0]);
@@ -432,4 +443,20 @@ public class SimpleTTS extends Activity implements TextToSpeech.OnInitListener, 
 		}
 	}
 
+
+	private class LocationReceiver extends BroadcastReceiver{
+
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			
+			latitude = intent.getDoubleExtra("latitude", -26.1912118495368958);
+			longitude = intent.getDoubleExtra("longitude", 28.027008175869915);
+			altitude = intent.getDoubleExtra("altitude", 1781);
+			currentloc.setLatitude(latitude);
+			currentloc.setLongitude(longitude);
+			currentloc.setAltitude(altitude);
+		}
+	
+}
 }

@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
 <resources>
     <string name="help">This application uses sound to provide a 3D repreentation of the Augmented Reality world of POI</string>
     <string name="about">Created by Ashleigh Campbell and Calvin Moore</string>
-    <string name="app_name">TTSHandler2</string>
+    <string name="app_name">BMyEyes</string>
 </resources>
