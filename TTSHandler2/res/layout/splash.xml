@@ -3,10 +3,10 @@
 	android:layout_width="fill_parent"
 	android:layout_height="wrap_content"
 	xmlns:android="http://schemas.android.com/apk/res/android"
-	android:paddingTop="70dip">
+	android:paddingTop="10dip">
 	<ImageView
 		android:id="@+id/logo"
-		android:layout_height="250dip"
+		android:layout_height="200dip"
 		android:layout_width="wrap_content"
 		android:src="@drawable/eyes"
 		android:layout_centerHorizontal="true"
@@ -19,9 +19,25 @@
 		android:text="@string/help"
 		android:gravity="center" 
 		android:layout_below="@+id/logo" 
-		android:paddingTop="10dip" 
-		android:paddingBottom="20dip"
-		android:paddingLeft="25dip" 
-		android:paddingRight="25dip"  
+		android:paddingTop="20dip"
+		android:paddingBottom="20dip"  
+		android:paddingLeft="15dip" 
+		android:paddingRight="15dip"
 		android:textStyle="bold"/>
+		<Button
+		android:id="@+id/test"
+		android:text="Testing"
+		android:layout_width="fill_parent"
+		android:layout_height="50dip"
+		android:layout_below="@+id/helpText"
+		android:gravity="center">
+		</Button>
+		<Button
+		android:id="@+id/demo"
+		android:layout_width="fill_parent"
+		android:layout_height="50dip"
+		android:layout_below="@+id/test" 
+		android:text="Demo"
+		android:gravity="center">
+		</Button>
 </RelativeLayout>
