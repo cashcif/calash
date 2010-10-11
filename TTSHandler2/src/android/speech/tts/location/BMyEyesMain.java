@@ -3,37 +3,50 @@ package android.speech.tts.location;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 
 public class BMyEyesMain extends Activity{
 	private static final String TAG = "BatmobileMain";
+		Button TestButton;
+		Button DemoButton;
 	
-	private final int SPLASH_DISPLAY_LENGHT = 100;
 	 @Override
 	 public void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
 	    
 	    setContentView(R.layout.splash);
+	    
+	    TestButton = (Button) findViewById(R.id.test);
+	    DemoButton = (Button) findViewById(R.id.demo);
+		
 	    Intent serviceIntent = new Intent();
 		serviceIntent.setAction("android.speech.tts.location.LocationLogggerService");
 		startService(serviceIntent);
-		
-	    
-	    
-	    new Handler().postDelayed(new Runnable(){
-            public void run() {
-	    Log.v(TAG, "Start up screen");
-	    
-            }
-        }, SPLASH_DISPLAY_LENGHT);
-	    
-         Log.i(TAG, "Service started");
+		Log.i(TAG, "Service started");
 
-         Intent simpleTTS = new Intent(BMyEyesMain.this, SimpleTTS.class);
-     	startActivity(simpleTTS);            
+		
+		TestButton.setOnClickListener(new View.OnClickListener(){
+			@Override
+			public void onClick(View arg0) {
+				Intent simpleTTS = new Intent(BMyEyesMain.this, SimpleTTS.class);
+		     	startActivity(simpleTTS);
+			}
+			});
+	    
+		DemoButton.setOnClickListener(new View.OnClickListener(){
+			@Override
+			public void onClick(View arg0) {
+				Intent simpleTTS = new Intent(BMyEyesMain.this, SimpleTTS.class);
+		     	startActivity(simpleTTS);
+			}
+			});
+	    
+         
+                     
           
-          Log.i(TAG, "Splash Activity Finished");
+          
 
 	
 
