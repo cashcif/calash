@@ -18,6 +18,15 @@
 			</intent-filter>
 		</service>
 		   
+		   <receiver android:name=".LocationLoggerServiceManager" 
+		 android:enabled="true" 
+		 android:exported="true"
+		 android:label="LocationLoggerServiceManager">
+		 		    <intent-filter>
+		        <action android:name="android.intent.action.BOOT_COMPLETED" />
+		        
+		    </intent-filter>
+		</receiver>
         <activity android:name=".BMyEyesMain"
                   android:label="@string/app_name"
                   android:theme="@android:style/Theme.Light.NoTitleBar"
@@ -40,6 +49,6 @@
 	<uses-permission android:name="android.permission.ACCESS_GPS" />    
 	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 	<uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION" />
-	
+	<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-sdk android:minSdkVersion="7" />
 </manifest> 

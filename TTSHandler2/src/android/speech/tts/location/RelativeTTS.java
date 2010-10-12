@@ -50,7 +50,6 @@ public class RelativeTTS extends Activity implements TextToSpeech.OnInitListener
 	double latitude;
 	double longitude;
 	double altitude;
-	int poiCounter;
 
 	private ArrayList<POI> pois;
 	private POI currentloc;
@@ -73,7 +72,6 @@ public class RelativeTTS extends Activity implements TextToSpeech.OnInitListener
 	private RadioButton RelativeRB;
 	private RadioButton AbsoluteRB;
 	private Button SpeakButton;
-	private Button RepeatButton;
 	private CheckBox AutoCheck;
 	private CheckBox ExpCheck;
 	
@@ -106,7 +104,6 @@ public class RelativeTTS extends Activity implements TextToSpeech.OnInitListener
 		AutoCheck = (CheckBox) findViewById (R.id.CheckAuto);
 		ExpCheck = (CheckBox) findViewById (R.id.CheckExplicit);
 		SpeakButton = (Button) findViewById(R.id.ButtonSpeak);
-		RepeatButton = (Button) findViewById(R.id.ButtonRepeat);
 		ExpCheck.setEnabled(true);
 		ExpCheck.setChecked(true);
 		
@@ -114,7 +111,6 @@ public class RelativeTTS extends Activity implements TextToSpeech.OnInitListener
 		maxvolume = audioMan.getStreamMaxVolume(AudioManager.STREAM_MUSIC) - 2;
 		minvolume = 2;
     	checked = false;
-    	poiCounter = 0;
     	pois = new ArrayList<POI>();
     	pois.clear();
     	resetExtremes();
@@ -125,7 +121,7 @@ public class RelativeTTS extends Activity implements TextToSpeech.OnInitListener
     	ttsmap.put(TextToSpeech.Engine.KEY_PARAM_STREAM, String.valueOf(AudioManager.STREAM_MUSIC));
 		ttsmap.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "voice");
     	
-		/*currentloc = new POI("Test Location", altitude,latitude,longitude); 
+		currentloc = new POI("Test Location", altitude,latitude,longitude); 
 		//currentloc = new POI("Test Location",1852 , -26.1924094, 28.03104222); 
 		POI point1 = new POI("Top of Stairs", 1802, -26.19246304, 28.03102076);
 		POI point2 = new POI("Bottom of Stairs", 1801, -26.19242549, 28.03101003);
@@ -139,18 +135,6 @@ public class RelativeTTS extends Activity implements TextToSpeech.OnInitListener
 		POI point10 = new POI("Wits Theatre", 1783, -26.19248986, 28.03156793);
 		POI point11 = new POI("JCSE", 1870, -26.19281176, 28.03227791);
 		POI point12 = new POI("Oppenheimer Sciences", 1783, -26.19179785, 28.03233504);
-		pois = new ArrayList<POI>();*/
-		currentloc = new POI("Current Location", 1781, -26.191319495368958, 28.027108175849915);
-		POI point1 = new POI("Tower of Light", 1795, -26.18977487312729, 28.025943338871002);
-		POI point2 = new POI("Swimming Pool", 1760, -26.189932847801174, 28.030063211917877);
-		POI point3 = new POI("Bus Depot", 1760, -26.19110284575957, 28.024309873580933);
-		POI point4 = new POI("Careers Centre", 1765, -26.19095121610493, 28.026949167251587);
-		POI point5 = new POI("First National Bank Building", 1755, -26.18859972778403, 28.026326894760132);
-		POI point6 = new POI("Hockey Astro", 1740, -26.18641426926645, 28.034706115722656);
-		POI point7 = new POI("Tennis Courts", 1760, -26.187713996232958, 28.032227754592896);
-		POI point8 = new POI("Residence", 1745, -26.186963044643104, 28.025457859039307);
-		POI point9 = new POI("Gas works", 1775, -26.18807984268992, 28.019492626190186);
-		POI point10 = new POI("Main Library", 1765, -26.190505953279867,28.030951023101807);
 		pois = new ArrayList<POI>();
 		pois.add(point1);
 		pois.add(point2);
@@ -162,6 +146,8 @@ public class RelativeTTS extends Activity implements TextToSpeech.OnInitListener
 		pois.add(point8);
 		pois.add(point9);
 		pois.add(point10);
+		pois.add(point11);
+		pois.add(point12);
 		
 		// Real sensor manager
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
@@ -201,29 +187,18 @@ public class RelativeTTS extends Activity implements TextToSpeech.OnInitListener
 		});
 		
 		SpeakButton.setOnClickListener(new View.OnClickListener(){
-			//@Override
-			public void onClick(View arg0) {
-				tts.stop();
-				//while(!finishedspeaking);
-				speak(pois.get(poiCounter), TextToSpeech.QUEUE_ADD);
-			}
-		});
-		
-		RepeatButton.setOnClickListener(new View.OnClickListener(){
 			@Override
 			public void onClick(View arg0) {
+				if (SpeakButton.getText() == "Stop")
+				{
+				SpeakButton.setText("Speak");
 				tts.stop();
-				while(!finishedspeaking);
-				repeat(pois.get(poiCounter - 1), TextToSpeech.QUEUE_ADD);
+				}
+			else
+			{
+			SpeakButton.setText("Stop");
+			announce();
 			}
-		});
-		
-		SpeakButton.setOnLongClickListener(new View.OnLongClickListener() {
-			@Override
-			public boolean onLongClick(View arg0) {
-				for(int i = 0; i < pois.size(); i++)
-					announce();
-				return false;
 			}
 		});
 		
@@ -247,32 +222,28 @@ public class RelativeTTS extends Activity implements TextToSpeech.OnInitListener
 	}
     
 	public void announce(){
-		while(!finishedspeaking||mp.isPlaying());
-		speak(pois.get(poiCounter), TextToSpeech.QUEUE_ADD);
-	}
-	
-	private void repeat(POI poi, int flushQueue) {
 		tts.stop();
-		poiCounter--;
-		while(!finishedspeaking);
-		speak(pois.get(poiCounter), TextToSpeech.QUEUE_ADD);
-    }
+		for(int i = 0; i < pois.size(); i++){
+			while(!finishedspeaking);
+			speak(pois.get(i), TextToSpeech.QUEUE_ADD);
+		}
+	}
 	
     private void speak(POI poi, int flushQueue) {
     	float angle = (AzimuthBar.getProgress() + poi.bearingTo((Location) currentloc))%360;
     	if(angle <= 90 || angle >= 270){
-    		while(!finishedspeaking||mp.isPlaying());
-    		finishedspeaking=false;
     		setPitch(poi);
     		setVolume(poi);
     		setBalance(poi);
     		tts.setSpeechRate(((float) SpeedBar.getProgress())/5);
+    		finishedspeaking=false;
 			if(exp_checked)
 				tts.synthesizeToFile(poi.getName() + convertDirec(angle) + fixDistance(poi.distanceTo(currentloc)+ DistanceBar.getProgress()) + fixElevation(poi.getAltitude()-currentloc.getAltitude()+ElevationBar.getProgress()), ttsmap, destfile);
+				//tts.speak(poi.getName() + convertDirec(AzimuthBar.getProgress() + poi.bearingTo((Location) currentloc)) + fixDistance(poi.distanceTo(currentloc)+ DistanceBar.getProgress()) + fixElevation(poi.getAltitude()-currentloc.getAltitude()+ElevationBar.getProgress()), flushQueue, ttsmap);
 			else
 				tts.synthesizeToFile(poi.getName(), ttsmap, destfile);
-			poiCounter++;
-			poiCounter = poiCounter%pois.size();
+				//tts.speak(poi.getName() + convertDirec(AzimuthBar.getProgress() + poi.bearingTo((Location) currentloc)), flushQueue, ttsmap);
+			while(!finishedspeaking||mp.isPlaying());
     	}
     }
     
