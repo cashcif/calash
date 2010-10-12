@@ -49,6 +49,7 @@ public class SimpleTTS extends Activity implements TextToSpeech.OnInitListener, 
 	private RadioButton RelativeRB;
 	private RadioButton AbsoluteRB;
 	private Button SpeakButton;
+	private Button RepeatButton;
 	private ArrayList<POI> pois;
 	private AudioManager audioMan;
 	private POI currentloc;
@@ -56,6 +57,7 @@ public class SimpleTTS extends Activity implements TextToSpeech.OnInitListener, 
 	double latitude;
 	double longitude;
 	double altitude;
+	int poiCounter;
 	
 	private SensorManager sensorManager;
 
@@ -94,6 +96,7 @@ public class SimpleTTS extends Activity implements TextToSpeech.OnInitListener, 
 		RelativeRB = (RadioButton) findViewById(R.id.RBRelative);
 		AbsoluteRB = (RadioButton) findViewById(R.id.RBAbsolute);
 		SpeakButton = (Button) findViewById(R.id.ButtonSpeak);
+		RepeatButton = (Button) findViewById(R.id.ButtonRepeat);
 		AutoCheck = (CheckBox) findViewById (R.id.CheckAuto);
 		ExpCheck = (CheckBox) findViewById (R.id.CheckExplicit);
 		audioMan = (AudioManager) getSystemService(AUDIO_SERVICE);
@@ -106,7 +109,7 @@ public class SimpleTTS extends Activity implements TextToSpeech.OnInitListener, 
     	lastUpdate = -1;
     	finishedspeaking = true;
     	checked = false;
-    	
+    	poiCounter = 0;
     	
     	ttsmap = new HashMap<String, String>();
     	ttsmap.put(TextToSpeech.Engine.KEY_PARAM_STREAM, String.valueOf(AudioManager.STREAM_MUSIC));
@@ -117,28 +120,8 @@ public class SimpleTTS extends Activity implements TextToSpeech.OnInitListener, 
 		ElevationBar.setOnSeekBarChangeListener(SpatialSeekBarChangeListener);
 		SpeedBar.setOnSeekBarChangeListener(SpeedSeekBarChangeListener);
 		VolumeBar.setOnSeekBarChangeListener(SpeedSeekBarChangeListener);
-
-		/*currentloc = new POI("Test Location",1802 , -26.1924094, 28.03104222); 
-=======
-		VolumeBar.setOnSeekBarChangeListener(SpeedSeekBarChangeListener);
-
-		currentloc = new POI("Test Location", altitude,latitude,longitude); 
-		//currentloc = new POI("Test Location",1852 , -26.1924094, 28.03104222);
->>>>>>> 41641447ac5f34c553b8f07e0b387bffef373a6b
-		POI point1 = new POI("Top of Stairs", 1802, -26.19246304, 28.03102076);
-		POI point2 = new POI("Bottom of Stairs", 1801, -26.19242549, 28.03101003);
-		POI point3 = new POI("Senate House", 1801, -26.19243622, 28.03095102);
-		POI point4 = new POI("Boom", 1789, -26.1924094, 28.0314821);
-		POI point5 = new POI("Chemistry Building Corner", 1789, -26.19237721, 28.03102612);
-		POI point6 = new POI("Chemistry Building", 1789, -26.19253278, 28.03102612);
-		POI point7 = new POI("Statue", 1789, -26.19251668, 28.03118169);
-		POI point8 = new POI("Digital Arts or Nunary", 1777, -26.19243622, 28.03232431);
-		POI point9 = new POI("Gate House", 1856, -26.19221677, 28.03201318);
-		POI point10 = new POI("Wits Theatre", 1783, -26.19248986, 28.03156793);
-		POI point11 = new POI("JCSE", 1870, -26.19281176, 28.03227791);
-		POI point12 = new POI("Oppenheimer Sciences", 1783, -26.19179785, 28.03233504);*/
 		
-		currentloc = new POI("Current Location", 1781, -26.191319495368958, 28.027108175849915);
+		currentloc = new POI("Test Location", altitude,latitude,longitude); 
 		POI point1 = new POI("Tower of Light", 1795, -26.18977487312729, 28.025943338871002);
 		POI point2 = new POI("Swimming Pool", 1760, -26.189932847801174, 28.030063211917877);
 		POI point3 = new POI("Bus Depot", 1760, -26.19110284575957, 28.024309873580933);
@@ -146,10 +129,9 @@ public class SimpleTTS extends Activity implements TextToSpeech.OnInitListener, 
 		POI point5 = new POI("First National Bank Building", 1755, -26.18859972778403, 28.026326894760132);
 		POI point6 = new POI("Hockey Astro", 1740, -26.18641426926645, 28.034706115722656);
 		POI point7 = new POI("Tennis Courts", 1760, -26.187713996232958, 28.032227754592896);
-		POI point8 = new POI("First Year Parking", 1745, -26.18538410500014, 28.02638053894043);
-		POI point9 = new POI("Residence", 1745, -26.186963044643104, 28.025457859039307);
-		POI point10 = new POI("Gas works", 1775, -26.18807984268992, 28.019492626190186);
-		POI point11 = new POI("Main Library", 1765, -26.190505953279867,28.030951023101807);
+		POI point8 = new POI("Residence", 1745, -26.186963044643104, 28.025457859039307);
+		POI point9 = new POI("Gas works", 1775, -26.18807984268992, 28.019492626190186);
+		POI point10 = new POI("Main Library", 1765, -26.190505953279867,28.030951023101807);
 		pois = new ArrayList<POI>();
 		pois.add(point1);
 		pois.add(point2);
@@ -161,8 +143,10 @@ public class SimpleTTS extends Activity implements TextToSpeech.OnInitListener, 
 		pois.add(point8);
 		pois.add(point9);
 		pois.add(point10);
-		pois.add(point11);
-		//pois.add(point12);
+		
+		currentloc.setLatitude(-26.1912118495368958);
+		currentloc.setLongitude(28.027008175869915);
+		currentloc.setAltitude(1781);
 		
 		sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 		
@@ -181,22 +165,35 @@ public class SimpleTTS extends Activity implements TextToSpeech.OnInitListener, 
 				startActivity(absoluteTTS);
 			}
 		});
+		
 		SpeakButton.setOnClickListener(new View.OnClickListener(){
 			@Override
 			
 			public void onClick(View arg0) {
-				if (SpeakButton.getText() == "Stop")
-					{
-					SpeakButton.setText("Speak");
-					tts.stop();
-					}
-				else
-				{
-				SpeakButton.setText("Stop");
+				tts.stop();
 				announce();
-				}
 			}
 		});
+		
+		RepeatButton.setOnClickListener(new View.OnClickListener(){
+			@Override
+			
+			public void onClick(View arg0) {
+				tts.stop();
+				repeat(pois.get(poiCounter - 1), TextToSpeech.QUEUE_FLUSH);
+			}
+		});
+		
+		SpeakButton.setOnLongClickListener(new View.OnLongClickListener() {
+			
+			@Override
+			public boolean onLongClick(View arg0) {
+				for(int i = 0; i < pois.size(); i++)
+					announce();
+				return false;
+			}
+		});
+		
 		AutoCheck.setOnCheckedChangeListener(new OnCheckedChangeListener()
 		{
 		    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
@@ -212,29 +209,33 @@ public class SimpleTTS extends Activity implements TextToSpeech.OnInitListener, 
 		        	sensorManager.registerListener(SimpleTTS.this, sensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION), SensorManager.SENSOR_DELAY_NORMAL);
 	//	    		sensorManager.registerListener(SimpleTTS.this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_UI);
 		        }
-
 		    }
 		});
-		
-
-		
 	}
+	
 	public void announce(){		
-		tts.stop();
-		for(int i = 0; i < pois.size(); i++){
-			while(!finishedspeaking);
-			
-			speak(pois.get(i), TextToSpeech.QUEUE_ADD);
-			finishedspeaking = false;
-		}
+		while(!finishedspeaking);
+		speak(pois.get(poiCounter), TextToSpeech.QUEUE_ADD);
+		finishedspeaking = false;
 	}
+	
+	private void repeat(POI poi, int flushQueue) {
+		tts.stop();
+		poiCounter--;
+		while(!finishedspeaking);
+		speak(pois.get(poiCounter), TextToSpeech.QUEUE_ADD);
+		finishedspeaking = false;
+    }
+	
 	private void speak(POI poi, int flushQueue){
-		tts.setSpeechRate(((float) SpeedBar.getProgress())/10 + 1);
+		tts.setSpeechRate((float) (SpeedBar.getProgress()/5));
 		audioMan.setStreamVolume(AudioManager.STREAM_MUSIC, VolumeBar.getProgress(), AudioManager.FLAG_VIBRATE);
-		tts.speak(poi.getName(), flushQueue, ttsmap);
-		tts.speak(convertDirec(AzimuthBar.getProgress() + poi.bearingTo((Location) currentloc)), flushQueue, ttsmap);
-		tts.speak(String.valueOf(fixDistance(poi.distanceTo((Location) currentloc) +DistanceBar.getProgress())), flushQueue, ttsmap);
-		tts.speak(String.valueOf(fixElevation(poi.getAltitude()-currentloc.getAltitude()+ElevationBar.getProgress())), flushQueue, ttsmap);
+		tts.speak(poi.getName() + convertDirec(AzimuthBar.getProgress() + poi.bearingTo((Location) currentloc)) + String.valueOf(fixDistance(poi.distanceTo((Location) currentloc) +DistanceBar.getProgress())) + String.valueOf(fixElevation(poi.getAltitude()-currentloc.getAltitude()-ElevationBar.getProgress())), flushQueue, ttsmap);
+		//tts.speak(convertDirec(AzimuthBar.getProgress() + poi.bearingTo((Location) currentloc)), flushQueue, ttsmap);
+		//tts.speak(String.valueOf(fixDistance(poi.distanceTo((Location) currentloc) +DistanceBar.getProgress())), flushQueue, ttsmap);
+		//tts.speak(String.valueOf(fixElevation(poi.getAltitude()-currentloc.getAltitude()+ElevationBar.getProgress())), flushQueue, ttsmap);
+		poiCounter++;
+		poiCounter = poiCounter%pois.size();
 	}
 	public void onDestroy(){
 		if (tts != null){
@@ -249,7 +250,6 @@ public class SimpleTTS extends Activity implements TextToSpeech.OnInitListener, 
 			if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED)
 				this.onDestroy();
 			tts.setOnUtteranceCompletedListener(this);
-
 		}
 	}
 	private String convertDirec(float azimuth) {
@@ -326,13 +326,11 @@ public class SimpleTTS extends Activity implements TextToSpeech.OnInitListener, 
 	};
 	@Override
     public void onUtteranceCompleted(String arg0) {
-		SpeakButton.setText("Speak");
     	finishedspeaking = true;    	
     }
 
 	@Override
 	public void onAccuracyChanged(Sensor arg0, int arg1) {
-		
 
 	}
 	@Override
