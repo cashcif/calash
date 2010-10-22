@@ -20,24 +20,17 @@
 		android:gravity="center" 
 		android:layout_below="@+id/logo" 
 		android:paddingTop="20dip"
-		android:paddingBottom="20dip"  
+		android:paddingBottom="50dip"  
 		android:paddingLeft="15dip" 
 		android:paddingRight="15dip"
 		android:textStyle="bold"/>
 		<Button
 		android:id="@+id/test"
-		android:text="Testing"
+		android:text="Start"
 		android:layout_width="fill_parent"
-		android:layout_height="50dip"
+		android:layout_height="80dip"
 		android:layout_below="@+id/helpText"
 		android:gravity="center">
 		</Button>
-		<Button
-		android:id="@+id/demo"
-		android:layout_width="fill_parent"
-		android:layout_height="50dip"
-		android:layout_below="@+id/test" 
-		android:text="Demo"
-		android:gravity="center">
-		</Button>
+		
 </RelativeLayout>

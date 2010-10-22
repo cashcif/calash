@@ -10,7 +10,7 @@ import android.widget.Button;
 public class BMyEyesMain extends Activity{
 	private static final String TAG = "BatmobileMain";
 		Button TestButton;
-		Button DemoButton;
+	//	Button DemoButton;
 	
 	 @Override
 	 public void onCreate(Bundle savedInstanceState) {
@@ -19,7 +19,7 @@ public class BMyEyesMain extends Activity{
 	    setContentView(R.layout.splash);
 	    
 	    TestButton = (Button) findViewById(R.id.test);
-	    DemoButton = (Button) findViewById(R.id.demo);
+	//    DemoButton = (Button) findViewById(R.id.demo);
 		
 	    Intent serviceIntent = new Intent();
 		serviceIntent.setAction("android.speech.tts.location.LocationLogggerService");
@@ -35,13 +35,13 @@ public class BMyEyesMain extends Activity{
 			}
 			});
 	    
-		DemoButton.setOnClickListener(new View.OnClickListener(){
-			@Override
-			public void onClick(View arg0) {
-				Intent simpleTTS = new Intent(BMyEyesMain.this, SimpleTTS.class);
-		     	startActivity(simpleTTS);
-			}
-			});
+//		DemoButton.setOnClickListener(new View.OnClickListener(){
+//			@Override
+//			public void onClick(View arg0) {
+//				Intent simpleTTS = new Intent(BMyEyesMain.this, SimpleTTS.class);
+//		     	startActivity(simpleTTS);
+//			}
+//			});
 	    
          
                      
